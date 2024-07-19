@@ -2,7 +2,6 @@
   "name": "wallet-service",
   "version": "1.0.0",
   "description": "A RESTful API to create, fund, transfer to digital wallets",
-  "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
     "clean": "rimraf dist/*",
@@ -33,8 +32,8 @@
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "http-status": "^1.7.4",
-    "jsonwebtoken": "^9.0.2",
     "joi": "^17.13.1",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.7",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
