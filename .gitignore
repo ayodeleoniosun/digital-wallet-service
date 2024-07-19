@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+coverage
+.idea
+yarn-error.log
+.DS_Store
+.
