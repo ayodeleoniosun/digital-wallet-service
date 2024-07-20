@@ -7,7 +7,7 @@ import * as HttpStatus from 'http-status';
 
 export class Jwt {
     generateToken({email, id}: Partial<User>): string {
-        return jwt.sign({id: id, email: email}, config.jwt_secret, {expiresIn: '24h'});
+        return jwt.sign({email: email}, config.jwt_secret, {expiresIn: '24h'});
     }
 
     verifyToken(token: string) {

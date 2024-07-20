@@ -7,6 +7,6 @@ export class WalletRepository {
     }
 
     async getWallet(userId: number): Promise<Wallet> {
-        return await Wallet.findOne({ where: { userId} });
+        return await Wallet.findOne({where: {userId}});
     }
 }

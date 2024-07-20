@@ -1,15 +1,16 @@
-import {Response, Request} from 'express';
-import * as HttpStatus from 'http-status';
-import {ResponseDto} from "../dtos/responses/response.dto";
+import {Request, Response} from 'express';
 import {WalletService} from "../services/wallet.service";
+import {ResponseDto} from "../dtos/responses/response.dto";
+import * as HttpStatus from 'http-status';
 import {WalletSuccessMessages} from "../utils/enums/messages/wallet/wallet.success.messages";
 
 export class WalletController {
-    public constructor(private walletService: WalletService) {}
+    public constructor(private walletService: WalletService) {
+    }
 
     getWallet = async (req: Request, res: Response) => {
         try {
-            const wallet = await this.walletService.getUserWallet(req.userData.id);
+            const wallet = await this.walletService.getUserWallet(req.user.id);
 
             const successResponse = new ResponseDto(true, WalletSuccessMessages.WALLET_RETRIEVED, wallet);
 
