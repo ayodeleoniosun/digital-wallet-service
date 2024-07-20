@@ -5,7 +5,6 @@ import {UserModelDto} from "../dtos/models/user.model.dto";
 import * as HttpStatus from 'http-status';
 import {AuthRepository} from "../repositories/auth.repository";
 import {LoginDto} from "../dtos/requests/login.dto";
-import {comparePassword, hashPassword} from "../utils/helpers/password.hash";
 import {generateToken} from "../utils/helpers/jwt";
 
 export class AuthService {
@@ -52,3 +51,4 @@ export class AuthService {
         }
     }
 }
+

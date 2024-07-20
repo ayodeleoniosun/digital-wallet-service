@@ -4,6 +4,8 @@ import {comparePassword, hashPassword} from "../../utils/helpers/password.hash";
 
 const sequelize = databaseService.sequelize;
 export class User extends Model{
+  password: string;
+
   validatePassword (password: string): boolean {
     return comparePassword(password, this.password);
   }

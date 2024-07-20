@@ -6,8 +6,8 @@ import HttpException from "../exceptions/http.exception";
 import {ErrorMessages} from "../enums/error.messages";
 import * as HttpStatus from 'http-status';
 
-export const generateToken = async (user: Partial<User>) => {
-    return jwt.sign({id: user.id, email: user.email}, config.jwt_secret, {expiresIn: '24h'});
+export const generateToken = async ({email, id}: Partial<User>) => {
+    return jwt.sign({id: id, email: email}, config.jwt_secret, {expiresIn: '24h'});
 }
 
 export const verifyToken = (token: string) => {
