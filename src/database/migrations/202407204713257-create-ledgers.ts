@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('deposits', {
+    await queryInterface.createTable('ledgers', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,38 +18,21 @@ module.exports = {
         },
         allowNull: false
       },
-      amount: {
+      old_balance: {
         allowNull: false,
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL
       },
-      reference: {
+      new_balance: {
+        allowNull: false,
+        type: Sequelize.DECIMAL
+      },
+      mutator_type: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      source: {
+      mutator_id: {
         allowNull: false,
-        type: Sequelize.ENUM,
-        values: ['bank_transfer', 'card']
-      },
-      account_number: {
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
-      account_name: {
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
-      bank_name: {
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
-      last_4_digits: {
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
-      auth_token: {
-        allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -66,6 +49,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('deposits');
+    await queryInterface.dropTable('ledgers');
   }
 };

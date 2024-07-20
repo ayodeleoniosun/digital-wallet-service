@@ -32,6 +32,18 @@ Withdrawal.init({
     allowNull: false,
     type: DataTypes.STRING
   },
+  account_number: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+  account_name: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+  bank_name: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,

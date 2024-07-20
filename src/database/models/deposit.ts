@@ -28,6 +28,31 @@ Deposit.init({
     allowNull: false,
     type: DataTypes.STRING
   },
+  source: {
+    allowNull: false,
+    type: DataTypes.ENUM,
+    values: ['bank_transfer', 'card']
+  },
+  account_number: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
+  account_name: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
+  bank_name: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
+  last_4_digits: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
+  auth_token: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,

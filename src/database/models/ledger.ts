@@ -3,9 +3,9 @@ import {databaseService} from "../../utils/database";
 
 const sequelize = databaseService.sequelize;
 
-export class Wallet extends Model{}
+export class Ledger extends Model{}
 
-Wallet.init({
+Ledger.init({
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -14,16 +14,27 @@ Wallet.init({
   },
   userId: {
     type: DataTypes.INTEGER,
-    unique: true,
     references: {
       model: 'User',
       key: 'id'
     },
     allowNull: false
   },
-  balance: {
+  old_balance: {
     allowNull: false,
     type: DataTypes.DECIMAL
+  },
+  new_balance: {
+    allowNull: false,
+    type: DataTypes.DECIMAL
+  },
+  mutator_type: {
+    allowNull: false,
+    type: DataTypes.STRING
+  },
+  mutator_id: {
+    allowNull: false,
+    type: DataTypes.STRING
   },
   createdAt: {
     allowNull: false,
@@ -39,6 +50,6 @@ Wallet.init({
   },
 }, {
   sequelize,
-  modelName: 'Wallet',
+  modelName: 'Ledger',
   timestamps: true,
 });

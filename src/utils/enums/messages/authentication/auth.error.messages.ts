@@ -1,4 +1,4 @@
-export enum ErrorMessages {
+export enum AuthErrorMessages {
     //user registration and login
     USER_ALREADY_EXISTS = 'Email already in use by another user.',
     USER_NOT_FOUND = 'User does not exist. Kindly create a new account.',
@@ -21,10 +21,8 @@ export enum ErrorMessages {
     EMPTY_PASSWORD = 'Password cannot be empty',
     PASSWORD_REQUIRED = 'Password is required',
     PASSWORD_MIN_LEGNTH_ERROR = 'Password cannot be less than 8 characters.',
-    PASSWORD_STRENGTH_ERROR = 'Password must contain at least one lowercase, one uppercase, one number and one special character',
-    PASSWORDS_DO_NOT_MATCH = 'Passwords do not match',
 
-    //requests
+    //jwt authorization
     UNAUTHENTICATED_USER = 'You must be logged in to perform this operation',
     INVALID_TOKEN = 'Invalid token supplied.',
     UNAUTHORIZED_ACCESS = 'You are unauthorized to perform this operation. Kindly login.'

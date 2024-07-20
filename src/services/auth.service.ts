@@ -1,14 +1,14 @@
 import HttpException from "../utils/exceptions/http.exception";
-import {ErrorMessages} from '../utils/enums/error.messages';
-import {SignupDto} from "../dtos/requests/signup.dto";
-import {UserModelDto} from "../dtos/models/user.model.dto";
+import {AuthErrorMessages} from '../utils/enums/messages/authentication/auth.error.messages';
+import {SignupDto} from "../dtos/requests/authentication/signup.dto";
+import {UserModelDto} from "../dtos/models/authentication/user.model.dto";
 import * as HttpStatus from 'http-status';
-import {AuthRepository} from "../repositories/auth.repository";
-import {LoginDto} from "../dtos/requests/login.dto";
-import {generateToken} from "../utils/helpers/jwt";
+import {AuthRepository} from "../repositories/authentication/auth.repository";
+import {LoginDto} from "../dtos/requests/authentication/login.dto";
+import {Jwt} from "../utils/helpers/jwt";
 
 export class AuthService {
-    public constructor(private authRepository: AuthRepository) {
+    public constructor(private authRepository: AuthRepository, public jwt: Jwt) {
     }
 
     async register(payload: SignupDto): Promise<UserModelDto> {
@@ -17,7 +17,7 @@ export class AuthService {
         const emailExists = await this.authRepository.getUserByEmail(email);
 
         if (emailExists) {
-            throw new HttpException(ErrorMessages.USER_ALREADY_EXISTS, HttpStatus.CONFLICT);
+            throw new HttpException(AuthErrorMessages.USER_ALREADY_EXISTS, HttpStatus.CONFLICT);
         }
 
         const {id, createdAt} = await this.authRepository.create({firstname, lastname, email, password});
@@ -32,16 +32,16 @@ export class AuthService {
         const user = await this.authRepository.getUserByEmail(email);
 
         if (!user) {
-            throw new HttpException(ErrorMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new HttpException(AuthErrorMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
 
         const result = user.validatePassword(password);
 
         if (!result) {
-            throw new HttpException(ErrorMessages.INCORRECT_LOGIN_CREDENTIALS);
+            throw new HttpException(AuthErrorMessages.INCORRECT_LOGIN_CREDENTIALS);
         }
 
-        const token = await generateToken(user);
+        const token = this.jwt.generateToken(user);
 
         if (token) {
             return {

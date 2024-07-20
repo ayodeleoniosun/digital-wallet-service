@@ -1,10 +1,10 @@
 import {Response, Request} from 'express';
 import {AuthService} from '../services/auth.service';
 import * as HttpStatus from 'http-status';
-import {SuccessMessages} from '../utils/enums/success.messages';
+import {AuthSuccessMessages} from '../utils/enums/messages/authentication/auth.success.messages';
 import {ResponseDto} from "../dtos/responses/response.dto";
-import {SignupDto} from "../dtos/requests/signup.dto";
-import {LoginDto} from "../dtos/requests/login.dto";
+import {SignupDto} from "../dtos/requests/authentication/signup.dto";
+import {LoginDto} from "../dtos/requests/authentication/login.dto";
 
 export class AuthController {
     public constructor(private authService: AuthService) {}
@@ -13,7 +13,7 @@ export class AuthController {
         try {
             const user = await this.authService.register(req.body as SignupDto);
 
-            const successResponse = new ResponseDto(true, SuccessMessages.REGISTRATION_SUCCESSFUL, user);
+            const successResponse = new ResponseDto(true, AuthSuccessMessages.REGISTRATION_SUCCESSFUL, user);
 
             return res.status(HttpStatus.CREATED).json(successResponse);
         } catch (error: any) {
@@ -27,7 +27,7 @@ export class AuthController {
         try {
             const response = await this.authService.login(req.body as LoginDto);
 
-            const successResponse = new ResponseDto(true, SuccessMessages.LOGIN_SUCCESSFUL, response);
+            const successResponse = new ResponseDto(true, AuthSuccessMessages.LOGIN_SUCCESSFUL, response);
 
             return res.status(HttpStatus.CREATED).json(successResponse);
         } catch (error: any) {
