@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import {databaseService} from "../../utils/database";
+import {User} from "./user";
 
 const sequelize = databaseService.sequelize;
 
@@ -69,4 +70,10 @@ Withdrawal.init({
     sequelize,
     modelName: 'Withdrawal',
     timestamps: true,
+});
+
+Withdrawal.belongsTo(User, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    as: 'debitor'
 });
