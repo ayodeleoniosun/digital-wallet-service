@@ -4,6 +4,8 @@ import {databaseService} from "../../utils/database";
 const sequelize = databaseService.sequelize;
 
 export class Wallet extends Model {
+    id: number;
+    balance: number;
 }
 
 Wallet.init({

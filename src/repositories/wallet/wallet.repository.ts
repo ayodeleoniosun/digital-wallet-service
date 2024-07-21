@@ -1,12 +1,29 @@
-import {CreateWalletDto} from "../../dtos/requests/wallet/create.wallet.dto";
+import {CreateWalletRequestDto} from "../../dtos/requests/wallet/create.wallet.request.dto";
 import {Wallet} from "../../database/models/wallet";
 
 export class WalletRepository {
-    async create(payload: Partial<CreateWalletDto>): Promise<Wallet> {
+    async create(payload: Partial<CreateWalletRequestDto>): Promise<Wallet> {
         return await Wallet.create(payload);
     }
 
     async getWallet(userId: number): Promise<Wallet> {
-        return await Wallet.findOne({where: {userId}});
+        return await Wallet.findOne({
+            where: {userId}
+        });
+    }
+
+    async lockWalletForUpdate(userId: number, transaction: object): Promise<Wallet> {
+        return await Wallet.findOne({
+            where: {userId},
+            lock: transaction.LOCK.UPDATE,
+            transaction
+        });
+    }
+
+    async incrementBalance(wallet: Wallet, amount: number, transaction: object): Promise<Wallet> {
+        return await wallet.increment(
+            'balance',
+            {by: amount, transaction: transaction}
+        );
     }
 }
