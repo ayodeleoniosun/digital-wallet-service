@@ -1,6 +1,8 @@
 import {createClient} from "redis";
 import config from "../../config";
+import {Service} from "typedi";
 
+@Service()
 export class RedisService {
     private readonly redisClient;
 

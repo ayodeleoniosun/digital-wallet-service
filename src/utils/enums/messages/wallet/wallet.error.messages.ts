@@ -1,6 +1,7 @@
 export enum WalletErrorMessages {
     WALLET_NOT_FOUND = 'You do not have an existing wallet',
     DEPOSIT_ALREADY_DONE = 'This deposit has already been completed',
+    INSUFFICIENT_FUNDS = 'Insufficient funds',
 
     SOURCE_CANNOT_BE_EMPTY = 'Source cannot be empty',
     SOURCE_REQUIRED = 'Source is required',
@@ -10,6 +11,11 @@ export enum WalletErrorMessages {
     AMOUNT_MUST_BE_POSITIVE = 'Amount must be a positive number',
     MINIMUM_AMOUNT = 'Amount must not be less than N10',
     AMOUNT_REQUIRED = 'Amount is required',
+
+    FEE_CANNOT_BE_EMPTY = 'Fee cannot be empty',
+    FEE_MUST_BE_POSITIVE = 'Fee must be a positive number',
+    MINIMUM_FEE = 'Fee must not be less than N10',
+    FEE_REQUIRED = 'Fee is required',
 
     REFERENCE_CANNOT_BE_EMPTY = 'Reference cannot be empty',
     REFERENCE_REQUIRED = 'Reference is required',

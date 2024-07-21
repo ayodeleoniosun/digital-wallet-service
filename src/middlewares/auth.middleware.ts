@@ -1,28 +1,18 @@
 import {Jwt} from "../utils/helpers/jwt";
-import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {Request} from 'express';
 import HttpException from "../utils/exceptions/http.exception";
 import {AuthErrorMessages} from "../utils/enums/messages/authentication/auth.error.messages";
 import * as HttpStatus from 'http-status';
 import {AuthRepository} from "../repositories/authentication/auth.repository";
 import {UserModelDto} from "../dtos/models/authentication/user.model.dto";
-import {ResponseDto} from "../dtos/responses/response.dto";
+import {Container, Service} from "typedi";
 
+@Service()
 export class AuthMiddleware {
-    constructor(public authRepository: AuthRepository, public jwt: Jwt) {
-    }
+    public jwtService = Container.get(Jwt);
+    public authRepository = Container.get(AuthRepository);
 
-    authenticate: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            req.user = await this.validateRequest(req);
-            return next();
-        } catch (error) {
-            const errorResponse = new ResponseDto(false, error.message);
-
-            return res.status(error.statusCode ?? HttpStatus.UNAUTHORIZED).json(errorResponse);
-        }
-    }
-
-    async validateRequest(req: Request) {
+    async authenticate(req: Request) {
         if (!req.headers.authorization) {
             throw new HttpException(AuthErrorMessages.UNAUTHENTICATED_USER, HttpStatus.UNAUTHORIZED);
         }
@@ -35,7 +25,7 @@ export class AuthMiddleware {
 
         const token = auth.split(' ')[1];
 
-        const {email} = this.jwt.verifyToken(token);
+        const {email} = this.jwtService.verifyToken(token);
 
         const user = await this.authRepository.getUserByEmail(email);
 

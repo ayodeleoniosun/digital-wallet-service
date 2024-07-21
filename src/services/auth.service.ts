@@ -6,7 +6,9 @@ import * as HttpStatus from 'http-status';
 import {AuthRepository} from "../repositories/authentication/auth.repository";
 import {LoginDto} from "../dtos/requests/authentication/login.dto";
 import {Jwt} from "../utils/helpers/jwt";
+import {Service} from "typedi";
 
+@Service()
 export class AuthService {
     public constructor(private authRepository: AuthRepository, public jwt: Jwt) {
     }
@@ -25,7 +27,6 @@ export class AuthService {
         return new UserModelDto(id, firstname, lastname, email, createdAt);
     }
 
-
     async login(payload: LoginDto) {
         const {email, password} = payload;
 
@@ -41,7 +42,7 @@ export class AuthService {
             throw new HttpException(AuthErrorMessages.INCORRECT_LOGIN_CREDENTIALS);
         }
 
-        const token = this.jwt.generateToken(user);
+        const token = this.jwt.generateToken(email);
 
         if (token) {
             return {
