@@ -7,11 +7,13 @@ import {WalletErrorMessages} from "../utils/enums/messages/wallet/wallet.error.m
 import * as HttpStatus from 'http-status';
 import {DepositRepository} from "../repositories/wallet/deposit.repository";
 import {databaseService} from "../utils/database";
+import {RedisService} from "../utils/redis/redis.service";
 
 export class WalletService {
     constructor(
         public walletRepository: WalletRepository,
-        public depositRepository: DepositRepository
+        public depositRepository: DepositRepository,
+        public redisService: RedisService
     ) {
     }
 
@@ -29,6 +31,14 @@ export class WalletService {
         return new WalletModelDto(balance, createdAt);
     }
 
+    async depositAlreadyCompleted(reference: string): boolean {
+        const checkFundedInDB = await this.depositRepository.getDepositByReference(reference);
+
+        const checkFundedInRedis = await this.redisService.get('fund-reference:' + reference);
+
+        return !!(checkFundedInDB || checkFundedInRedis);
+    }
+
     async fund(userId: number, payload: FundWalletRequestDto): Promise<DepositModelDto> {
         const {reference, amount} = payload;
 
@@ -38,9 +48,9 @@ export class WalletService {
             throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
 
-        const depositAlreadyDone = await this.depositRepository.getDepositByReference(reference);
+        const depositAlreadyCompleted = await this.depositAlreadyCompleted(reference);
 
-        if (depositAlreadyDone) {
+        if (depositAlreadyCompleted) {
             throw new HttpException(WalletErrorMessages.DEPOSIT_ALREADY_DONE, HttpStatus.BAD_REQUEST);
         }
 
@@ -57,7 +67,9 @@ export class WalletService {
                 const deposit = await this.depositRepository.create(payload, {transaction: transaction});
 
                 await this.walletRepository.incrementBalance(wallet, amount, transaction);
-                
+
+                this.redisService.set('fund-reference:' + reference, reference);
+
                 return new DepositModelDto(deposit);
             });
         } catch (error) {

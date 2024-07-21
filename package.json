@@ -37,6 +37,7 @@
     "mysql2": "^3.9.7",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
+    "redis": "^4.6.15",
     "sequelize": "^6.37.3",
     "swagger-ui-express": "^5.0.0",
     "tslib": "^2.6.2",
