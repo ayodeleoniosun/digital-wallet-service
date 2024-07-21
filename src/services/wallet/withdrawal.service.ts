@@ -8,6 +8,7 @@ import {Service} from "typedi";
 import {DebitWalletRequestDto} from "../../dtos/requests/wallet/debit.wallet.request.dto";
 import {WithdrawalModelDto} from "../../dtos/models/wallet/withdrawal.model";
 import * as crypto from "crypto";
+import config from "../../config";
 
 @Service()
 export class WithdrawalService {
@@ -40,7 +41,7 @@ export class WithdrawalService {
                 }
 
                 payload.userId = userId;
-                payload.reference = 'kora_' + crypto.randomBytes(12).toString('hex');
+                payload.reference = config.transaction_reference_prefix + crypto.randomBytes(12).toString('hex');
 
                 const withdrawal = await this.withdrawalRepository.create(payload as DebitWalletRequestDto, {transaction: transaction});
 

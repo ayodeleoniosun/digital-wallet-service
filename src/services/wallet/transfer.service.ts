@@ -10,6 +10,7 @@ import {TransferRepository} from "../../repositories/wallet/transfer.repository"
 import {TransferRequestDto} from "../../dtos/requests/wallet/transfer.request.dto";
 import {AuthRepository} from "../../repositories/authentication/auth.repository";
 import {TransferModelDto} from "../../dtos/models/wallet/transfer.model";
+import config from "../../config";
 
 @Service()
 export class TransferService {
@@ -60,7 +61,7 @@ export class TransferService {
 
                 payload.senderId = senderId;
                 payload.recipientId = recipient.id;
-                payload.reference = 'kora_' + crypto.randomBytes(12).toString('hex');
+                payload.reference = config.transaction_reference_prefix + crypto.randomBytes(12).toString('hex');
 
                 transfer = await this.transferRepository.create(payload as TransferRequestDto, {transaction: transaction});
 

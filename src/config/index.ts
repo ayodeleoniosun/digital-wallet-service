@@ -12,5 +12,6 @@ export default {
         host: process.env.DB_HOST,
         port: process.env.DB_PORT
     },
-    redis_uri: process.env.REDIS_ENDPOINT_URI
+    redis_uri: process.env.REDIS_ENDPOINT_URI,
+    transaction_reference_prefix: process.env.TRANSACTION_REFERENCE_PREFIX
 }
