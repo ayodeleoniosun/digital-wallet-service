@@ -1,5 +1,5 @@
 import {createClient} from "redis";
-import config from "../../config";
+import config from "../config";
 import {Service} from "typedi";
 
 @Service()

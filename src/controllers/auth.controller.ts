@@ -7,7 +7,7 @@ import {SignupDto} from "../dtos/requests/authentication/signup.dto";
 import {Body, JsonController, Post, Res} from "routing-controllers";
 import {Service} from "typedi";
 import {LoginDto} from "../dtos/requests/authentication/login.dto";
-import {ValidationService} from "../utils/validations/validation.service";
+import {ValidationService} from "../services/validation.service";
 
 @JsonController('/auth')
 @Service()

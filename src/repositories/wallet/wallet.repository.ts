@@ -35,4 +35,8 @@ export class WalletRepository {
             {by: amount, transaction: transaction}
         );
     }
+
+    insufficientFunds(wallet: Wallet, amount: number): boolean {
+        return wallet.balance < amount;
+    }
 }

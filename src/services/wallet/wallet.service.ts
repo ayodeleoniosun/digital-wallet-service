@@ -1,5 +1,5 @@
-import {WalletRepository} from "../repositories/wallet/wallet.repository";
-import {WalletModelDto} from "../dtos/models/wallet/wallet.model";
+import {WalletRepository} from "../../repositories/wallet/wallet.repository";
+import {WalletModelDto} from "../../dtos/models/wallet/wallet.model";
 import {Service} from "typedi";
 
 @Service()

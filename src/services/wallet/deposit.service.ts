@@ -1,12 +1,12 @@
-import {WalletRepository} from "../repositories/wallet/wallet.repository";
-import {FundWalletRequestDto} from "../dtos/requests/wallet/fund.wallet.request.dto";
-import {DepositModelDto} from "../dtos/models/wallet/deposit.model";
-import HttpException from "../utils/exceptions/http.exception";
-import {WalletErrorMessages} from "../utils/enums/messages/wallet/wallet.error.messages";
+import {WalletRepository} from "../../repositories/wallet/wallet.repository";
+import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
+import {DepositModelDto} from "../../dtos/models/wallet/deposit.model";
+import HttpException from "../../utils/exceptions/http.exception";
+import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.error.messages";
 import * as HttpStatus from 'http-status';
-import {DepositRepository} from "../repositories/wallet/deposit.repository";
-import {databaseService} from "../utils/database";
-import {RedisService} from "../utils/redis/redis.service";
+import {DepositRepository} from "../../repositories/wallet/deposit.repository";
+import {databaseService} from "../../utils/database";
+import {RedisService} from "../redis.service";
 import {Service} from "typedi";
 
 @Service()
@@ -61,7 +61,7 @@ export class DepositService {
             });
 
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

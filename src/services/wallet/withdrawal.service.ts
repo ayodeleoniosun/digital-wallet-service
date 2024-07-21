@@ -1,22 +1,17 @@
-import {WalletRepository} from "../repositories/wallet/wallet.repository";
-import HttpException from "../utils/exceptions/http.exception";
-import {WalletErrorMessages} from "../utils/enums/messages/wallet/wallet.error.messages";
-import {WithdrawalRepository} from "../repositories/wallet/withdrawal.repository";
+import {WalletRepository} from "../../repositories/wallet/wallet.repository";
+import HttpException from "../../utils/exceptions/http.exception";
+import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.error.messages";
+import {WithdrawalRepository} from "../../repositories/wallet/withdrawal.repository";
 import * as HttpStatus from 'http-status';
-import {databaseService} from "../utils/database";
+import {databaseService} from "../../utils/database";
 import {Service} from "typedi";
-import {DebitWalletRequestDto} from "../dtos/requests/wallet/debit.wallet.request.dto";
-import {WithdrawalModelDto} from "../dtos/models/wallet/withdrawal.model";
+import {DebitWalletRequestDto} from "../../dtos/requests/wallet/debit.wallet.request.dto";
+import {WithdrawalModelDto} from "../../dtos/models/wallet/withdrawal.model";
 import * as crypto from "crypto";
-import {Wallet} from "../database/models/wallet";
 
 @Service()
 export class WithdrawalService {
     constructor(public walletRepository: WalletRepository, public withdrawalRepository: WithdrawalRepository) {
-    }
-
-    insufficientFunds(wallet: Wallet, totalAmount: number): boolean {
-        return wallet.balance < totalAmount;
     }
 
     async execute(userId: number, payload: DebitWalletRequestDto): Promise<WithdrawalModelDto> {
@@ -30,8 +25,8 @@ export class WithdrawalService {
 
         const totalAmount = amount + fee;
 
-        const insufficientFunds = this.insufficientFunds(getWallet, totalAmount);
-        
+        const insufficientFunds = this.walletRepository.insufficientFunds(getWallet, totalAmount);
+
         if (insufficientFunds) {
             throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
         }
@@ -55,7 +50,7 @@ export class WithdrawalService {
             });
 
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

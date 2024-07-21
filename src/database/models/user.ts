@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import {databaseService} from "../../utils/database";
-import {comparePassword, hashPassword} from "../../utils/helpers/password.hash";
+import {comparePassword, hashPassword, toTitleCase} from "../../utils/helpers/tools";
 
 const sequelize = databaseService.sequelize;
 
@@ -15,6 +15,7 @@ export class User extends Model {
     validatePassword(password: string): boolean {
         return comparePassword(password, this.password);
     }
+
 }
 
 User.init({
@@ -33,6 +34,13 @@ User.init({
         allowNull: false,
         unique: true,
         type: DataTypes.STRING
+    },
+    fullname: {
+        type: DataTypes.VIRTUAL,
+
+        get() {
+            return toTitleCase(`${this.firstname} ${this.lastname}`);
+        }
     },
     email: {
         allowNull: false,

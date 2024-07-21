@@ -1,4 +1,4 @@
-import {Jwt} from "../utils/helpers/jwt";
+import {JwtService} from "../services/jwt.service";
 import {Request} from 'express';
 import HttpException from "../utils/exceptions/http.exception";
 import {AuthErrorMessages} from "../utils/enums/messages/authentication/auth.error.messages";
@@ -9,7 +9,7 @@ import {Container, Service} from "typedi";
 
 @Service()
 export class AuthMiddleware {
-    public jwtService = Container.get(Jwt);
+    public jwtService = Container.get(JwtService);
     public authRepository = Container.get(AuthRepository);
 
     async authenticate(req: Request) {

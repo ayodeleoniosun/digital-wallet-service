@@ -1,5 +1,6 @@
 import {WalletErrorMessages} from "../utils/enums/messages/wallet/wallet.error.messages";
 import {SourceType} from "../dtos/models/wallet/deposit.model";
+import {AuthErrorMessages} from "../utils/enums/messages/authentication/auth.error.messages";
 
 const Joi = require('joi');
 
@@ -94,5 +95,28 @@ export function debitWalletSchema() {
                 "string.empty": WalletErrorMessages.BANK_NAME_CANNOT_BE_EMPTY,
             }),
 
+    });
+}
+
+export function transferSchema() {
+    return Joi.object({
+        email: Joi.string()
+            .email({minDomainSegments: 2, tlds: {allow: ['com', 'net']}})
+            .required()
+            .messages({
+                "string.empty": AuthErrorMessages.EMPTY_EMAIL,
+                "any.required": AuthErrorMessages.EMAIL_REQUIRED,
+                "string.email": AuthErrorMessages.INVALID_EMAIL_SUPPLIED
+            }),
+        amount: Joi.number()
+            .required()
+            .positive()
+            .min(10)
+            .messages({
+                "string.empty": WalletErrorMessages.AMOUNT_CANNOT_BE_EMPTY,
+                "any.required": WalletErrorMessages.AMOUNT_REQUIRED,
+                "number.positive": WalletErrorMessages.AMOUNT_MUST_BE_POSITIVE,
+                "number.min": WalletErrorMessages.MINIMUM_AMOUNT,
+            })
     });
 }

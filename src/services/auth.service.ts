@@ -5,12 +5,12 @@ import {UserModelDto} from "../dtos/models/authentication/user.model.dto";
 import * as HttpStatus from 'http-status';
 import {AuthRepository} from "../repositories/authentication/auth.repository";
 import {LoginDto} from "../dtos/requests/authentication/login.dto";
-import {Jwt} from "../utils/helpers/jwt";
+import {JwtService} from "./jwt.service";
 import {Service} from "typedi";
 
 @Service()
 export class AuthService {
-    public constructor(private authRepository: AuthRepository, public jwt: Jwt) {
+    public constructor(private authRepository: AuthRepository, public jwtService: JwtService) {
     }
 
     async register(payload: SignupDto): Promise<UserModelDto> {
@@ -42,7 +42,7 @@ export class AuthService {
             throw new HttpException(AuthErrorMessages.INCORRECT_LOGIN_CREDENTIALS);
         }
 
-        const token = this.jwt.generateToken(email);
+        const token = this.jwtService.generateToken(email);
 
         if (token) {
             return {

@@ -1,7 +1,10 @@
 export enum WalletErrorMessages {
     WALLET_NOT_FOUND = 'You do not have an existing wallet',
+    RECIPIENT_NOT_FOUND = 'Recipient does not exist. Please check the email address and try again.',
+    RECIPIENT_WALLET_NOT_FOUND = 'Recipient does not have an active wallet.',
     DEPOSIT_ALREADY_DONE = 'This deposit has already been completed',
     INSUFFICIENT_FUNDS = 'Insufficient funds',
+    WALLET_LOCK_NOT_ACQUIRED = 'Lock not acquired.',
 
     SOURCE_CANNOT_BE_EMPTY = 'Source cannot be empty',
     SOURCE_REQUIRED = 'Source is required',

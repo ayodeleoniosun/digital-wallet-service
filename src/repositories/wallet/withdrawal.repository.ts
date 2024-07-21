@@ -7,10 +7,4 @@ export class WithdrawalRepository {
     async create(payload: FundWalletRequestDto, transaction: object): Promise<Withdrawal> {
         return await Withdrawal.create(payload, transaction);
     }
-
-    async getWithdrawalByReference(reference: string): Promise<Withdrawal> {
-        return await Withdrawal.findOne({
-            where: {reference}
-        });
-    }
 }
