@@ -31,7 +31,7 @@ useExpressServer(app, {
 
         try {
             return await authMiddleware.authenticate(action.request);
-        } catch (error) {
+        } catch (error: any) {
             const errorResponse = new ResponseDto(false, error.message);
 
             return action.response.status(error.statusCode ?? HttpStatus.UNAUTHORIZED).json(errorResponse);

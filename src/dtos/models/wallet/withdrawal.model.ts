@@ -1,15 +1,15 @@
-import {Withdrawal} from "../../../database/models/withdrawal";
+import {IDebitWallet} from "../../../interfaces/wallet/debit.wallet.interface";
 
 export class WithdrawalModelDto {
     account_number: string;
     account_name: string;
     bank_name: string;
-    amount: number;
-    fee: number;
+    amount: string;
+    fee: string;
     reference: string;
     createdAt: Date;
 
-    constructor(withdrawal: Withdrawal) {
+    constructor(withdrawal: IDebitWallet) {
         this.account_number = withdrawal.account_number;
         this.account_name = withdrawal.account_name;
         this.bank_name = withdrawal.bank_name;

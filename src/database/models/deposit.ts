@@ -6,6 +6,7 @@ const sequelize = databaseService.sequelize;
 
 export class Deposit extends Model {
     id: number;
+    userId: number;
     source: string;
     amount: number;
     reference: string;

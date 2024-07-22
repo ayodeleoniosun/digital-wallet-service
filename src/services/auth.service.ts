@@ -1,19 +1,20 @@
 import HttpException from "../utils/exceptions/http.exception";
 import {AuthErrorMessages} from '../utils/enums/messages/authentication/auth.error.messages';
-import {SignupDto} from "../dtos/requests/authentication/signup.dto";
 import {UserModelDto} from "../dtos/models/authentication/user.model.dto";
 import * as HttpStatus from 'http-status';
 import {AuthRepository} from "../repositories/authentication/auth.repository";
-import {LoginDto} from "../dtos/requests/authentication/login.dto";
 import {JwtService} from "./jwt.service";
-import {Service} from "typedi";
+import {Container, Service} from "typedi";
+import {comparePassword} from "../utils/helpers/tools";
+import {SignupRequestDto} from "../dtos/requests/authentication/signup.request.dto";
+import {LoginRequestDto} from "../dtos/requests/authentication/login.request.dto";
 
 @Service()
 export class AuthService {
-    public constructor(private authRepository: AuthRepository, public jwtService: JwtService) {
-    }
+    public jwtService = Container.get(JwtService);
+    public authRepository = Container.get(AuthRepository);
 
-    async register(payload: SignupDto): Promise<UserModelDto> {
+    async register(payload: SignupRequestDto): Promise<UserModelDto> {
         const {firstname, lastname, email, password} = payload;
 
         const emailExists = await this.authRepository.getUserByEmail(email);
@@ -27,7 +28,7 @@ export class AuthService {
         return new UserModelDto(id, firstname, lastname, email, createdAt);
     }
 
-    async login(payload: LoginDto) {
+    async login(payload: LoginRequestDto) {
         const {email, password} = payload;
 
         const user = await this.authRepository.getUserByEmail(email);
@@ -36,7 +37,7 @@ export class AuthService {
             throw new HttpException(AuthErrorMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
 
-        const result = user.validatePassword(password);
+        const result = comparePassword(password, user.dataValues.password);
 
         if (!result) {
             throw new HttpException(AuthErrorMessages.INCORRECT_LOGIN_CREDENTIALS);

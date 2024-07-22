@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import {databaseService} from "../../utils/database";
-import {comparePassword, hashPassword, toTitleCase} from "../../utils/helpers/tools";
+import {hashPassword, toTitleCase} from "../../utils/helpers/tools";
 
 const sequelize = databaseService.sequelize;
 
@@ -11,11 +11,6 @@ export class User extends Model {
     email: string;
     password: string;
     createdAt: Date;
-
-    validatePassword(password: string): boolean {
-        return comparePassword(password, this.password);
-    }
-
 }
 
 User.init({

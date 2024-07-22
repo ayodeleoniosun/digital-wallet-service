@@ -25,9 +25,9 @@ export class AuthMiddleware {
 
         const token = auth.split(' ')[1];
 
-        const {email} = this.jwtService.verifyToken(token);
+        const verifyToken = this.jwtService.verifyToken(token);
 
-        const user = await this.authRepository.getUserByEmail(email);
+        const user = await this.authRepository.getUserByEmail(verifyToken['email']);
 
         if (!user) {
             throw new HttpException(AuthErrorMessages.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);

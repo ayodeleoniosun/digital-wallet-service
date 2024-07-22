@@ -4,6 +4,7 @@ export enum WalletErrorMessages {
     RECIPIENT_WALLET_NOT_FOUND = 'Recipient does not have an active wallet.',
     DEPOSIT_ALREADY_DONE = 'This deposit has already been completed',
     INSUFFICIENT_FUNDS = 'Insufficient funds',
+    FORBIDDEN_TRANSFER = 'You cannot transfer funds to yourself. Use the fund wallet route instead',
     WALLET_LOCK_NOT_ACQUIRED = 'Lock not acquired.',
 
     SOURCE_CANNOT_BE_EMPTY = 'Source cannot be empty',

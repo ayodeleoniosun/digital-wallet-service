@@ -3,11 +3,11 @@ import {AuthService} from '../services/auth.service';
 import * as HttpStatus from 'http-status';
 import {AuthSuccessMessages} from '../utils/enums/messages/authentication/auth.success.messages';
 import {ResponseDto} from "../dtos/responses/response.dto";
-import {SignupDto} from "../dtos/requests/authentication/signup.dto";
 import {Body, JsonController, Post, Res} from "routing-controllers";
 import {Service} from "typedi";
-import {LoginDto} from "../dtos/requests/authentication/login.dto";
 import {ValidationService} from "../services/validation.service";
+import {SignupRequestDto} from "../dtos/requests/authentication/signup.request.dto";
+import {LoginRequestDto} from "../dtos/requests/authentication/login.request.dto";
 
 @JsonController('/auth')
 @Service()
@@ -16,7 +16,7 @@ export class AuthController {
     }
 
     @Post('/register')
-    async register(@Body() signupDto: SignupDto, @Res() res: Response) {
+    async register(@Body() signupDto: SignupRequestDto, @Res() res: Response) {
         try {
             this.validationService.validatePayload(signupDto, 'registration');
 
@@ -33,7 +33,7 @@ export class AuthController {
     }
 
     @Post('/login')
-    async login(@Body() loginDto: LoginDto, @Res() res: Response) {
+    async login(@Body() loginDto: LoginRequestDto, @Res() res: Response) {
         try {
             this.validationService.validatePayload(loginDto, 'login');
 

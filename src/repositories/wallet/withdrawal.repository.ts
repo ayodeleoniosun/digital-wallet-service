@@ -1,10 +1,10 @@
-import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
 import {Withdrawal} from "../../database/models/withdrawal";
 import {Service} from "typedi";
+import {IDebitWallet} from "../../interfaces/wallet/debit.wallet.interface";
 
 @Service()
 export class WithdrawalRepository {
-    async create(payload: FundWalletRequestDto, transaction: object): Promise<Withdrawal> {
-        return await Withdrawal.create(payload, transaction);
+    async create(payload: Partial<IDebitWallet>, transaction: any): Promise<IDebitWallet> {
+        return await Withdrawal.create(payload, transaction) as IDebitWallet;
     }
 }

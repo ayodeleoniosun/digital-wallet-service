@@ -1,10 +1,10 @@
-import {SignupDto} from "../../dtos/requests/authentication/signup.dto";
+import {ISignup} from "../../interfaces/authentication/signup.interface";
 import {User} from "../../database/models/user";
 import {Service} from "typedi";
 
 @Service()
 export class AuthRepository {
-    async create(payload: Partial<SignupDto>): Promise<User> {
+    async create(payload: Partial<ISignup>): Promise<User> {
         return await User.create(payload);
     }
 

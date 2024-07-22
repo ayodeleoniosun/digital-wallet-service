@@ -4,13 +4,12 @@ import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.erro
 import * as HttpStatus from 'http-status';
 import {databaseService} from "../../utils/database";
 import {Service} from "typedi";
-import {WithdrawalModelDto} from "../../dtos/models/wallet/withdrawal.model";
 import * as crypto from "crypto";
 import {TransferRepository} from "../../repositories/wallet/transfer.repository";
-import {TransferRequestDto} from "../../dtos/requests/wallet/transfer.request.dto";
 import {AuthRepository} from "../../repositories/authentication/auth.repository";
 import {TransferModelDto} from "../../dtos/models/wallet/transfer.model";
 import config from "../../config";
+import {TransferRequestDto} from "../../dtos/requests/wallet/transfer.request.dto";
 
 @Service()
 export class TransferService {
@@ -21,7 +20,7 @@ export class TransferService {
     ) {
     }
 
-    async execute(senderId: number, payload: TransferRequestDto): Promise<WithdrawalModelDto> {
+    async execute(senderId: number, payload: TransferRequestDto): Promise<TransferModelDto> {
         const {amount, email} = payload;
 
         let senderWallet = await this.walletRepository.getWallet(senderId);
@@ -40,6 +39,10 @@ export class TransferService {
 
         if (!recipient) {
             throw new HttpException(WalletErrorMessages.RECIPIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+
+        if (recipient.id === senderId) {
+            throw new HttpException(WalletErrorMessages.FORBIDDEN_TRANSFER, HttpStatus.NOT_FOUND);
         }
 
         let recipientWallet = await this.walletRepository.getWallet(recipient.id);
@@ -74,7 +77,7 @@ export class TransferService {
 
             return new TransferModelDto(data);
 
-        } catch (error) {
+        } catch (error: any) {
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

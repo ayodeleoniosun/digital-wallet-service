@@ -8,8 +8,8 @@ export class TransferModelDto {
     createdAt: Date;
 
     constructor(transfer: Transfer) {
-        this.sender = transfer.sender.fullname;
-        this.recipient = transfer.recipient.fullname;
+        this.sender = transfer.sender['fullname'];
+        this.recipient = transfer.recipient['fullname'];
         this.reference = transfer.reference;
         this.createdAt = transfer.createdAt;
     }

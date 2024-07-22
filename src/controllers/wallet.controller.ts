@@ -2,7 +2,6 @@ import {Request, Response} from 'express';
 import {ResponseDto} from "../dtos/responses/response.dto";
 import * as HttpStatus from 'http-status';
 import {WalletSuccessMessages} from "../utils/enums/messages/wallet/wallet.success.messages";
-import {FundWalletRequestDto} from "../dtos/requests/wallet/fund.wallet.request.dto";
 import {Body, CurrentUser, Get, JsonController, Post, Res} from "routing-controllers";
 import {Service} from "typedi";
 import {User} from "../database/models/user";
@@ -10,9 +9,10 @@ import {ValidationService} from "../services/validation.service";
 import {WalletService} from "../services/wallet/wallet.service";
 import {DepositService} from "../services/wallet/deposit.service";
 import {WithdrawalService} from "../services/wallet/withdrawal.service";
+import {TransferService} from "../services/wallet/transfer.service";
+import {FundWalletRequestDto} from "../dtos/requests/wallet/fund.wallet.request.dto";
 import {DebitWalletRequestDto} from "../dtos/requests/wallet/debit.wallet.request.dto";
 import {TransferRequestDto} from "../dtos/requests/wallet/transfer.request.dto";
-import {TransferService} from "../services/wallet/transfer.service";
 
 @JsonController('/wallets')
 @Service()
@@ -26,7 +26,7 @@ export class WalletController {
     }
 
     @Get('/')
-    async getWallet(@CurrentUser() user?: User, @Body() req: Request, @Res() res: Response) {
+    async getWallet(@Body() req: Request, @Res() res: Response, @CurrentUser() user?: User) {
         try {
             const wallet = await this.walletService.getUserWallet(user.id);
 
@@ -41,7 +41,7 @@ export class WalletController {
     }
 
     @Post('/fund')
-    async fund(@CurrentUser() user?: User, @Body() fundWalletRequestDto: FundWalletRequestDto, @Res() res: Response) {
+    async fund(@Body() fundWalletRequestDto: FundWalletRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
             this.validationService.validatePayload(fundWalletRequestDto, 'fund-wallet');
 
@@ -58,7 +58,7 @@ export class WalletController {
     }
 
     @Post('/withdraw')
-    async debit(@CurrentUser() user?: User, @Body() debitWalletRequestDto: DebitWalletRequestDto, @Res() res: Response) {
+    async debit(@Body() debitWalletRequestDto: DebitWalletRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
             this.validationService.validatePayload(debitWalletRequestDto, 'debit-wallet');
 
@@ -75,7 +75,7 @@ export class WalletController {
     }
 
     @Post('/transfer')
-    async transfer(@CurrentUser() user?: User, @Body() transferRequestDto: TransferRequestDto, @Res() res: Response) {
+    async transfer(@Body() transferRequestDto: TransferRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
             this.validationService.validatePayload(transferRequestDto, 'transfer');
 

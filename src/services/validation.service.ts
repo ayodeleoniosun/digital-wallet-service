@@ -1,5 +1,4 @@
 import {Service} from "typedi";
-import {SignupDto} from "../dtos/requests/authentication/signup.dto";
 import HttpException from "../utils/exceptions/http.exception";
 import * as HttpStatus from "http-status";
 import {loginSchema, registrationSchema} from "../schemas/auth.schema";
@@ -7,7 +6,7 @@ import {debitWalletSchema, fundWalletSchema, transferSchema} from "../schemas/wa
 
 @Service()
 export class ValidationService {
-    validatePayload(data: SignupDto, type: string) {
+    validatePayload(data: any, type: string) {
         let schema;
 
         switch (type) {

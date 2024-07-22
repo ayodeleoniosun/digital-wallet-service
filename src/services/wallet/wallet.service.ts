@@ -16,7 +16,9 @@ export class WalletService {
             return new WalletModelDto(balance, createdAt);
         }
 
-        const {balance, createdAt} = await this.walletRepository.create({userId: userId});
+        const wallet = await this.walletRepository.create({userId: userId});
+
+        const {balance, createdAt} = wallet;
 
         return new WalletModelDto(balance, createdAt);
     }

@@ -6,7 +6,9 @@ const sequelize = databaseService.sequelize;
 
 export class Wallet extends Model {
     id: number;
+    userId: number;
     balance: number;
+    createdAt: Date;
 }
 
 Wallet.init({

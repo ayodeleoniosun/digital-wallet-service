@@ -22,11 +22,11 @@ export class RedisService {
         });
     }
 
-    async set(key: string, value: any): boolean {
+    async set(key: string, value: any): Promise<boolean> {
         return await this.redisClient.set(key, value);
     }
 
-    async get(key: string): any {
+    async get(key: string): Promise<any> {
         return await this.redisClient.get(key);
     }
 
@@ -34,7 +34,7 @@ export class RedisService {
         try {
             await this.redisClient.disconnect();
             console.log('Redis disconnection successful');
-        } catch (error) {
+        } catch (error: any) {
             console.error(`Redis disconnection error => ${error}`);
         }
     }

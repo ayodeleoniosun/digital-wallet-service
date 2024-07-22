@@ -6,6 +6,7 @@ const sequelize = databaseService.sequelize;
 
 export class Withdrawal extends Model {
     id: number;
+    userId: number;
     amount: number;
     fee: number;
     reference: string;

@@ -1,5 +1,4 @@
 import {WalletRepository} from "../../repositories/wallet/wallet.repository";
-import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
 import {DepositModelDto} from "../../dtos/models/wallet/deposit.model";
 import HttpException from "../../utils/exceptions/http.exception";
 import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.error.messages";
@@ -8,6 +7,8 @@ import {DepositRepository} from "../../repositories/wallet/deposit.repository";
 import {databaseService} from "../../utils/database";
 import {RedisService} from "../redis.service";
 import {Service} from "typedi";
+import {IFundWallet} from "../../interfaces/wallet/fund.wallet.interface";
+import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
 
 @Service()
 export class DepositService {
@@ -18,7 +19,7 @@ export class DepositService {
     ) {
     }
 
-    async depositAlreadyCompleted(reference: string): boolean {
+    async depositAlreadyCompleted(reference: string): Promise<boolean> {
         const checkFundedInDB = await this.depositRepository.getDepositByReference(reference);
 
         const checkFundedInRedis = await this.redisService.get('fund-reference:' + reference);
@@ -51,7 +52,7 @@ export class DepositService {
 
                 payload.userId = userId;
 
-                const deposit = await this.depositRepository.create(payload as FundWalletRequestDto, {transaction: transaction});
+                const deposit = await this.depositRepository.create(payload as IFundWallet, {transaction: transaction});
 
                 await this.walletRepository.incrementBalance(wallet, amount, transaction);
 
@@ -60,7 +61,7 @@ export class DepositService {
                 return new DepositModelDto(deposit);
             });
 
-        } catch (error) {
+        } catch (error: any) {
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

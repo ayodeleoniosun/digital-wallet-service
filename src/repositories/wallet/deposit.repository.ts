@@ -1,16 +1,16 @@
-import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
+import {IFundWallet} from "../../interfaces/wallet/fund.wallet.interface";
 import {Deposit} from "../../database/models/deposit";
 import {Service} from "typedi";
 
 @Service()
 export class DepositRepository {
-    async create(payload: FundWalletRequestDto, transaction: object): Promise<Deposit> {
-        return await Deposit.create(payload, transaction);
+    async create(payload: Partial<IFundWallet>, transaction: any): Promise<IFundWallet> {
+        return await Deposit.create(payload, transaction) as IFundWallet;
     }
 
-    async getDepositByReference(reference: string): Promise<Deposit> {
+    async getDepositByReference(reference: string): Promise<IFundWallet> {
         return await Deposit.findOne({
             where: {reference}
-        });
+        }) as IFundWallet;
     }
 }

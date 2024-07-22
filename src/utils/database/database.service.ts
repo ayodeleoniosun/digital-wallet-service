@@ -10,16 +10,16 @@ export class DatabaseService {
             config.database.name,
             config.database.username,
             config.database.password, {
-            host: 'localhost',
-            dialect: dialect
-        });
+                host: 'localhost',
+                dialect: dialect
+            });
     }
 
     async authenticate() {
         try {
             await this.sequelize.authenticate();
             console.log("Database successfully connected");
-        } catch (error) {
+        } catch (error: any) {
             console.error("Unable to connect to the database: ", error);
         }
     }

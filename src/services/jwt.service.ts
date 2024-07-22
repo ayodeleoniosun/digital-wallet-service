@@ -14,7 +14,7 @@ export class JwtService {
     verifyToken(token: string) {
         try {
             return jwt.verify(token, config.jwt_secret);
-        } catch (err) {
+        } catch (error: any) {
             throw new HttpException(AuthErrorMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN);
         }
     }

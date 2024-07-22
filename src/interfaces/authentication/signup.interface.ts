@@ -1,4 +1,4 @@
-export class SignupDto {
+export interface ISignup {
     firstname: string;
     lastname: string;
     email: string;

@@ -1,10 +1,10 @@
-import {CreateWalletRequestDto} from "../../dtos/requests/wallet/create.wallet.request.dto";
+import {IWallet} from "../../interfaces/wallet/wallet.interface";
 import {Wallet} from "../../database/models/wallet";
 import {Service} from "typedi";
 
 @Service()
 export class WalletRepository {
-    async create(payload: CreateWalletRequestDto): Promise<Wallet> {
+    async create(payload: Partial<IWallet>): Promise<Wallet> {
         return await Wallet.create(payload);
     }
 
@@ -14,7 +14,7 @@ export class WalletRepository {
         });
     }
 
-    async lockWalletForUpdate(userId: number, transaction: object): Promise<Wallet> {
+    async lockWalletForUpdate(userId: number, transaction: any): Promise<Wallet> {
         return await Wallet.findOne({
             where: {userId},
             lock: transaction.LOCK.UPDATE,
@@ -22,14 +22,14 @@ export class WalletRepository {
         });
     }
 
-    async incrementBalance(wallet: Wallet, amount: number, transaction: object): Promise<Wallet> {
+    async incrementBalance(wallet: Wallet, amount: number, transaction: any): Promise<Wallet> {
         return await wallet.increment(
             'balance',
             {by: amount, transaction: transaction}
         );
     }
 
-    async decrementBalance(wallet: Wallet, amount: number, transaction: object): Promise<Wallet> {
+    async decrementBalance(wallet: Wallet, amount: number, transaction: any): Promise<Wallet> {
         return await wallet.decrement(
             'balance',
             {by: amount, transaction: transaction}
