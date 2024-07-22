@@ -4,8 +4,6 @@ WORKDIR /app
 
 RUN npm install -g typescript
 
-RUN npm install -g sequelize-cli
-
 RUN npm install -g nodemon
 
 COPY package*.json ./
