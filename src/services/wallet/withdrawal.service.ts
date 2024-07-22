@@ -47,8 +47,6 @@ export class WithdrawalService {
 
                 const withdrawal = await this.withdrawalRepository.create(payload as IDebitWallet, {transaction: transaction});
 
-                console.log(withdrawal);
-
                 await this.walletRepository.decrementBalance(wallet, totalAmount, transaction);
 
                 return new WithdrawalModelDto(withdrawal);

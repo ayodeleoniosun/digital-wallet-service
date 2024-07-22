@@ -1,7 +1,8 @@
 import {Withdrawal} from "../../../database/models/withdrawal";
 
 export class WithdrawalModelDto {
-    userId: number
+    id: number;
+    userId: number;
     account_number: string;
     account_name: string;
     bank_name: string;
@@ -13,6 +14,7 @@ export class WithdrawalModelDto {
     constructor(data: Withdrawal) {
         const withdrawal = data.dataValues;
 
+        this.id = withdrawal.id;
         this.userId = withdrawal.userId;
         this.account_number = withdrawal.account_number;
         this.account_name = withdrawal.account_name;

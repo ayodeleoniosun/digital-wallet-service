@@ -6,6 +6,7 @@ export enum SourceType {
 }
 
 export class DepositModelDto {
+    id: number;
     userId: number;
     source: string;
     amount: string;
@@ -20,6 +21,7 @@ export class DepositModelDto {
     constructor(data: Deposit) {
         const deposit = data.dataValues;
 
+        this.id = deposit.id;
         this.userId = deposit.userId;
         this.source = <SourceType>deposit.source;
         this.amount = deposit.amount.toLocaleString("en", {minimumFractionDigits: 2});
