@@ -5,12 +5,10 @@ import {mockWalletRepository} from "../mocks/repositories/wallet.mock.repository
 import {DepositService} from "../../src/services/wallet/deposit.service";
 import {DepositRepository} from "../../src/repositories/wallet/deposit.repository";
 import {WalletRepository} from "../../src/repositories/wallet/wallet.repository";
-import {JwtService} from "../../src/services/jwt.service";
-import {mockJWTService} from "../mocks/services/jwt.mock.service";
 import {mockRedisService} from "../mocks/services/redis.mock.service";
 import {getBankTransferDeposit} from "../fixtures/deposit.fixture";
 import {getWallet} from "../fixtures/wallet.fixture";
-import deposit from "../fixtures/deposit.test.payload";
+import deposit from "../fixtures/payloads/deposit.test.payload";
 import {DepositModelDto} from "../../src/dtos/models/wallet/deposit.model";
 import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.error.messages";
 import {RedisService} from "../../src/services/redis.service";
@@ -28,12 +26,6 @@ describe('Deposit unit tests', () => {
         };
     });
 
-    jest.mock('../../src/services/jwt.service', () => {
-        return {
-            JWTService: jest.fn().mockImplementation(() => mockJWTService)
-        };
-    });
-
     jest.mock('../../src/services/redis.service', () => {
         return {
             RedisService: jest.fn().mockImplementation(() => mockRedisService)
@@ -45,7 +37,6 @@ describe('Deposit unit tests', () => {
     beforeAll(async () => {
         Container.set(WalletRepository, mockWalletRepository);
         Container.set(DepositRepository, mockDepositRepository);
-        Container.set(JwtService, mockJWTService);
         Container.set(RedisService, mockRedisService);
 
         depositService = Container.get(DepositService);

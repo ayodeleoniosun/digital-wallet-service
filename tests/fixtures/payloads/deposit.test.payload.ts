@@ -1,4 +1,4 @@
-import {FundWalletRequestDto} from "../../src/dtos/requests/wallet/fund.wallet.request.dto";
+import {FundWalletRequestDto} from "../../../src/dtos/requests/wallet/fund.wallet.request.dto";
 import {faker} from "@faker-js/faker";
 
 let deposit = new FundWalletRequestDto();

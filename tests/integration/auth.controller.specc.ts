@@ -2,7 +2,7 @@ import request from "supertest";
 import app from "../../src/app";
 import * as HttpStatus from 'http-status';
 import {User} from "../../src/database/models/user";
-import {registerPayload} from "../fixtures/user.test.payload";
+import {registerPayload} from "../fixtures/payloads/user.test.payload";
 import {AuthErrorMessages} from "../../src/utils/enums/messages/authentication/auth.error.messages";
 
 describe('AuthController', () => {

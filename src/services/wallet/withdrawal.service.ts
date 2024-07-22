@@ -8,8 +8,8 @@ import {Service} from "typedi";
 import {WithdrawalModelDto} from "../../dtos/models/wallet/withdrawal.model";
 import * as crypto from "crypto";
 import config from "../../config";
-import {IDebitWallet} from "../../interfaces/wallet/debit.wallet.interface";
 import {DebitWalletRequestDto} from "../../dtos/requests/wallet/debit.wallet.request.dto";
+import {IDebitWallet} from "../../interfaces/wallet/debit.wallet.interface";
 
 @Service()
 export class WithdrawalService {
@@ -42,9 +42,12 @@ export class WithdrawalService {
                 }
 
                 payload.userId = userId;
+
                 payload.reference = config.transaction_reference_prefix + crypto.randomBytes(12).toString('hex');
 
                 const withdrawal = await this.withdrawalRepository.create(payload as IDebitWallet, {transaction: transaction});
+
+                console.log(withdrawal);
 
                 await this.walletRepository.decrementBalance(wallet, totalAmount, transaction);
 
