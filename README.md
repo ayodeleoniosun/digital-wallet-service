@@ -44,28 +44,6 @@ cd digital-wallet-service
 bash setup.sh
 ```
 
-#### Step 5: Manually create new database
-
-Run the following command:
-
-```bash
-docker exec -it wallet_db mysql -u root -p
-```
-
-Enter the database password.
-
-Then, run this command and exit afterwards:
-
-```bash
-  CREATE DATABASE wallet_service;
-```
-
-#### Step 6: Run migrations
-
-```bash
-docker-compose exec wallet_app npx sequelize-cli db:migrate
-```
-
 ### API Documentation
 
 The Postman API collection is locally available [Here](./docs/postman_collection.json). <br/>

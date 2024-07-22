@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  wallet_app:
+  app:
     build: ./
-    container_name: wallet_app
+    container_name: app
     image: node-app
     env_file: ./.env
     ports:
@@ -15,20 +15,20 @@ services:
       - DB_PASSWORD=$DB_PASSWORD
       - DB_NAME=$DB_DATABASE
     depends_on:
-      - wallet_db
-      - wallet_redis
+      - database
+      - redis
     volumes:
       - .:/app
     networks:
       - node-network
 
-  wallet_db:
+  database:
     image: mysql:8
-    container_name: wallet_db
+    container_name: database
     restart: unless-stopped
     env_file: ./.env
     ports:
-      - '3309:3306'
+      - '3306:3306'
     environment:
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_DATABASE=$DB_DATABASE
@@ -37,9 +37,9 @@ services:
     networks:
       - node-network
 
-  wallet_redis:
+  redis:
     image: redis
-    container_name: wallet_redis
+    container_name: redis
     ports:
       - "6379:6379"
     networks:
