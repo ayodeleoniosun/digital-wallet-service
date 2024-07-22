@@ -1,15 +1,16 @@
 import {Transfer} from "../../../database/models/transfer";
 
 export class TransferModelDto {
-    sender: string;
+    amount: string;
     recipient: string;
-    amount: number;
     reference: string;
     createdAt: Date;
 
-    constructor(transfer: Transfer) {
-        this.sender = transfer.sender['fullname'];
-        this.recipient = transfer.recipient['fullname'];
+    constructor(recipient: string, data: Transfer) {
+        const transfer = data.dataValues;
+
+        this.amount = transfer.amount.toLocaleString("en", {minimumFractionDigits: 2});
+        this.recipient = recipient;
         this.reference = transfer.reference;
         this.createdAt = transfer.createdAt;
     }

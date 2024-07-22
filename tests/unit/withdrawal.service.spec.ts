@@ -57,8 +57,7 @@ describe('Withdrawals unit tests', () => {
         withdrawal.amount = 2000;
         const mockWithdrawalData = getWithdrawal({amount: withdrawal.amount});
         mockWalletRepository.getWallet.mockResolvedValue(getWallet());
-        mockWalletRepository.lockForUpdate.mockResolvedValue(getWallet());
-        mockWithdrawalRepository.create.mockResolvedValue(mockWithdrawalData);
+        mockWalletRepository.insufficientFunds.mockResolvedValue(true);
 
         try {
             await withdrawalService.execute(mockWithdrawalData.dataValues.userId, withdrawal);

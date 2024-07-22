@@ -5,7 +5,7 @@ export class WithdrawalModelDto {
     account_number: string;
     account_name: string;
     bank_name: string;
-    amount: number;
+    amount: string;
     fee: number;
     reference: string;
     createdAt: Date;

@@ -1,7 +1,7 @@
 export interface ITransfer {
     amount: number;
     reference: string;
-    sender: any;
-    recipient: any;
+    senderId: number;
+    recipientId: number;
     createdAt: Date;
 }

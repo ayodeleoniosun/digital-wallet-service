@@ -6,10 +6,12 @@ const sequelize = databaseService.sequelize;
 
 export class Transfer extends Model {
     id: number;
-    amount: string;
+    senderId: number;
+    recipientId: number;
+    amount: number;
     reference: string;
-    sender: string;
-    recipient: string;
+    sender!: string;
+    recipient!: string;
     readonly createdAt: Date;
 }
 

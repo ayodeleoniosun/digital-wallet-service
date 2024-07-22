@@ -27,7 +27,7 @@ export class WithdrawalService {
 
         const totalAmount = amount + fee;
 
-        const insufficientFunds = this.walletRepository.insufficientFunds(getWallet, totalAmount);
+        const insufficientFunds = await this.walletRepository.insufficientFunds(getWallet, totalAmount);
 
         if (insufficientFunds) {
             throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);

@@ -29,7 +29,7 @@ export class TransferService {
             throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
 
-        const insufficientFunds = this.walletRepository.insufficientFunds(senderWallet, amount);
+        const insufficientFunds = await this.walletRepository.insufficientFunds(senderWallet, amount);
 
         if (insufficientFunds) {
             throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
@@ -73,9 +73,9 @@ export class TransferService {
                 await this.walletRepository.incrementBalance(recipientWallet, amount, transaction);
             });
 
-            const data = await this.transferRepository.findById(transfer.id);
+            const data = await this.transferRepository.findById(transfer.dataValues.id);
 
-            return new TransferModelDto(data);
+            return new TransferModelDto(email, data);
 
         } catch (error: any) {
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
