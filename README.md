@@ -8,8 +8,9 @@ This is scalable, performant and reliable RESTful API that allow users to perfor
 * Fund user wallet.
 * Withdraw from user wallet
 * Transfer between wallets.
-* View accounting summary.
-* View deposit, withdrawals and transaction details.
+* View accounting summary. (coming soon as addon)
+* View deposit, withdrawals and transaction details. (coming soon as addon)
+* Sending of email notifications for each operation (coming soon)
 
 ### Technologies Stack
 
@@ -53,7 +54,7 @@ docker exec -it wallet_db mysql -u root -p
 
 Enter the database password.
 
-Then, run this command:
+Then, run this command and exit afterwards:
 
 ```bash
   CREATE DATABASE wallet_service;
@@ -83,3 +84,10 @@ To run test, use the following command:
 docker-compose exec wallet_app npm run test
 ```
 
+### Database Schema Diagram
+
+Update coming soon as addon
+
+### Testing concurrency with JMeter
+
+Update coming soon as addon

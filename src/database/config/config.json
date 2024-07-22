@@ -3,14 +3,14 @@
     "username": "root",
     "password": "root",
     "database": "wallet_service",
-    "host": "mysqldb",
+    "host": "wallet_db",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "root",
     "database": "wallet_service",
-    "host": "mysqldb",
+    "host": "wallet_db",
     "dialect": "mysql"
   },
   "production": {
