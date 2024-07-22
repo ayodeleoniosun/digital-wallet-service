@@ -55,8 +55,8 @@ export class TransferService {
             let transfer = null;
 
             await databaseService.sequelize.transaction(async transaction => {
-                senderWallet = await this.walletRepository.lockWalletForUpdate(senderId, transaction);
-                recipientWallet = await this.walletRepository.lockWalletForUpdate(recipient.id, transaction);
+                senderWallet = await this.walletRepository.lockForUpdate(senderId, transaction);
+                recipientWallet = await this.walletRepository.lockForUpdate(recipient.id, transaction);
 
                 if (!senderWallet || !recipientWallet) {
                     throw new HttpException(WalletErrorMessages.WALLET_LOCK_NOT_ACQUIRED, HttpStatus.BAD_REQUEST);

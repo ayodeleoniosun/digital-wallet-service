@@ -30,6 +30,10 @@ export class RedisService {
         return await this.redisClient.get(key);
     }
 
+    async flush(): Promise<any> {
+        return await this.redisClient.flush();
+    }
+
     async close() {
         try {
             await this.redisClient.disconnect();

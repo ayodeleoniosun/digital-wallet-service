@@ -8,9 +8,9 @@ export class Transfer extends Model {
     id: number;
     amount: string;
     reference: string;
-    createdAt: Date;
     sender: string;
     recipient: string;
+    readonly createdAt: Date;
 }
 
 Transfer.init({

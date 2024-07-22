@@ -14,7 +14,7 @@ export class WalletRepository {
         });
     }
 
-    async lockWalletForUpdate(userId: number, transaction: any): Promise<Wallet> {
+    async lockForUpdate(userId: number, transaction: any): Promise<Wallet> {
         return await Wallet.findOne({
             where: {userId},
             lock: transaction.LOCK.UPDATE,

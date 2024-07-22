@@ -13,7 +13,7 @@ export class Withdrawal extends Model {
     account_number: string;
     account_name: string;
     bank_name: string;
-    createdAt: Date;
+    readonly createdAt: Date;
 }
 
 Withdrawal.init({

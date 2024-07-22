@@ -15,7 +15,7 @@ export class Deposit extends Model {
     bank_name?: string;
     last_4_digits?: string;
     auth_token?: string;
-    createdAt: Date;
+    readonly createdAt: Date;
 }
 
 Deposit.init({

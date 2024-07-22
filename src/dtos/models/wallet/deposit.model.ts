@@ -1,4 +1,4 @@
-import {IFundWallet} from "../../../interfaces/wallet/fund.wallet.interface";
+import {Deposit} from "../../../database/models/deposit";
 
 export enum SourceType {
     BANK_TRANSFER = 'bank_transfer',
@@ -6,6 +6,7 @@ export enum SourceType {
 }
 
 export class DepositModelDto {
+    userId: number;
     source: string;
     amount: string;
     reference: string;
@@ -16,7 +17,10 @@ export class DepositModelDto {
     auth_token?: string;
     createdAt: Date;
 
-    constructor(deposit: IFundWallet) {
+    constructor(data: Deposit) {
+        const deposit = data.dataValues;
+
+        this.userId = deposit.userId;
         this.source = <SourceType>deposit.source;
         this.amount = deposit.amount.toLocaleString("en", {minimumFractionDigits: 2});
         this.reference = deposit.reference;

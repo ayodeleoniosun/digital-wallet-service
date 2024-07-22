@@ -35,7 +35,7 @@ export class WithdrawalService {
 
         try {
             return await databaseService.sequelize.transaction(async transaction => {
-                const wallet = await this.walletRepository.lockWalletForUpdate(userId, transaction);
+                const wallet = await this.walletRepository.lockForUpdate(userId, transaction);
 
                 if (!wallet) {
                     throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);

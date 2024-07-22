@@ -8,7 +8,7 @@ export class Wallet extends Model {
     id: number;
     userId: number;
     balance: number;
-    createdAt: Date;
+    readonly createdAt: Date;
 }
 
 Wallet.init({

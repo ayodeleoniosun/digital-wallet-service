@@ -10,7 +10,7 @@ export class User extends Model {
     lastname: string;
     email: string;
     password: string;
-    createdAt: Date;
+    readonly createdAt: Date;
 }
 
 User.init({
