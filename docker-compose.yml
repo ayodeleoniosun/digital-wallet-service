@@ -1,28 +1,53 @@
 version: '3.8'
 
 services:
-
-  wallet_db:
-    image : mysql
-    container_name : wallet_db
-    restart: unless-stopped
+  app:
+    build: ./
+    container_name: app
+    image: node-app
+    env_file: ./.env
+    ports:
+      - '3001:3001'
     environment:
-      - MYSQL_ROOT_USER=${DB_USERNAME}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_DATABASE}
-    ports:
-      - "3307:3306"
-    volumes:
-      - ./usr/src/app/db_data:/var/lib/mysql
-
-  wallet_app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/usr/src/app
-    ports:
-      - "3001:3002"
-    working_dir: /usr/src/app
+      - APP_PORT=$APP_PORT
+      - DB_HOST=$DB_HOST
+      - DB_USER=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_DATABASE
     depends_on:
-      - db
+      - mysqldb
+      - redis
+    volumes:
+      - .:/app
+    networks:
+      - node-network
+
+  mysqldb:
+    image: mysql:8
+    container_name: mysqldb
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - '3309:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_DATABASE
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - node-network
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - node-network
+
+volumes:
+  db:
+
+networks:
+  node-network:
+    driver: bridge

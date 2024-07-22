@@ -10,7 +10,7 @@ export class DatabaseService {
             config.database.name,
             config.database.username,
             config.database.password, {
-                host: 'localhost',
+                host: config.database.host,
                 dialect: dialect
             });
     }

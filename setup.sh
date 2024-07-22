@@ -12,4 +12,8 @@ docker-compose build
 # Spring up docker containers in detached mode
 docker-compose up -d --force-recreate
 
-echo "${GREEN} Application running on port 8085!"
+echo "${PINK}Running migrations ..."
+
+docker-compose exec app npx sequelize-cli db:migrate
+
+echo "${GREEN} Application dockerized and started"

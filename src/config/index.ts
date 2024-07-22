@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default {
-    port: process.env.PORT,
+    port: process.env.APP_PORT,
     jwt_secret: process.env.JWT_SECRET,
     redis_uri: process.env.REDIS_ENDPOINT_URI,
     transaction_reference_prefix: process.env.TRANSACTION_REFERENCE_PREFIX,
