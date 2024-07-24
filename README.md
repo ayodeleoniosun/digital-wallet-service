@@ -57,5 +57,5 @@ An end-to-end test and unit tests are written for the routes and services. <br/>
 To run test, use the following command:
 
 ```bash
-docker-compose exec wallet_app npm run test
+docker-compose exec app npm run test
 ```

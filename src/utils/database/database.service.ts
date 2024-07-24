@@ -6,10 +6,8 @@ export class DatabaseService {
     public sequelize: Sequelize;
 
     public constructor(public dialect: DialectType) {
-        const database = config.environment === 'test' ? config.database.test_name : config.database.name;
-        
         this.sequelize = new Sequelize(
-            database,
+            config.database.name,
             config.database.username,
             config.database.password, {
                 host: config.database.host,
@@ -20,7 +18,7 @@ export class DatabaseService {
     async authenticate() {
         try {
             await this.sequelize.authenticate();
-            console.log("Database successfully connected");
+            console.log("Database successfully connected to => " + config.database.name);
         } catch (error: any) {
             console.error("Unable to connect to the database: ", error);
         }

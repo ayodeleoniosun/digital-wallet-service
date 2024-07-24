@@ -6,6 +6,8 @@ PINK=$(tput setaf 5)
 
 echo "${PINK}Building docker images ..."
 
+docker compose down
+
 # Build docker images
 docker-compose build
 

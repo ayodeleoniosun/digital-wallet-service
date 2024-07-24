@@ -7,7 +7,6 @@ import {validEmail, validPassword} from "../factories/user.factory";
 import {AuthErrorMessages} from "../../src/utils/enums/messages/authentication/auth.error.messages";
 import {AuthSuccessMessages} from "../../src/utils/enums/messages/authentication/auth.success.messages";
 import {AuthRepository} from "../../src/repositories/authentication/auth.repository";
-import {execSync} from "child_process";
 
 describe('Authentication Controller', () => {
     const authRepository = new AuthRepository();
@@ -26,7 +25,6 @@ describe('Authentication Controller', () => {
 
     beforeAll(async () => {
         await databaseService.authenticate();
-        execSync('npx sequelize-cli db:migrate');
     });
 
     beforeEach(async () => {
