@@ -47,15 +47,16 @@ bash setup.sh
 
 ### API Documentation
 
-The Postman API collection is locally available [Here](./docs/postman_collection.json). <br/>
+The Postman API collection is locally available for testing [Here](./docs/postman_collection.json). <br/>
 
 The Postman API collection is remotely
-available [Here](https://documenter.getpostman.com/view/18037473/2sA3kVk1gB#6bd08934-0dc7-4775-a9d8-546295e58e51)
+available for
+testing [Here](https://documenter.getpostman.com/view/18037473/2sA3kVk1gB#6bd08934-0dc7-4775-a9d8-546295e58e51)
 . <br/>
 
 ### Testing
 
-An integration and unit tests are written for the controllers and services. <br/>
+Integration and unit tests were written for the controllers and services. <br/>
 
 To run tests, use the following command:
 
