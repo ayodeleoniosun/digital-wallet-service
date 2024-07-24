@@ -1,11 +1,11 @@
 import {Service} from "typedi";
 import {Transfer} from "../../database/models/transfer";
-import {ITransfer} from "../../interfaces/wallet/transfer.interface";
 import {User} from "../../database/models/user";
+import {TransferRequestDto} from "../../dtos/requests/wallet/transfer.request.dto";
 
 @Service()
 export class TransferRepository {
-    async create(payload: Partial<ITransfer>, transaction: any): Promise<object> {
+    async create(payload: Partial<TransferRequestDto>, transaction: any): Promise<object> {
         const transfer = await Transfer.create(payload, transaction) as Transfer;
 
         return transfer.dataValues;

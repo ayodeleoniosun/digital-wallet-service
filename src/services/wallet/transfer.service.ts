@@ -58,7 +58,7 @@ export class TransferService {
                 payload.recipientId = recipient.id;
                 payload.reference = generateReference();
 
-                transfer = await this.transferRepository.create(payload as TransferRequestDto, {transaction: transaction});
+                transfer = await this.transferRepository.create(payload, {transaction: transaction});
 
                 await this.walletRepository.decrementBalance(senderWallet, amount, transaction);
 

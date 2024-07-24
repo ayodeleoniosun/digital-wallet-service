@@ -1,10 +1,10 @@
-import {IFundWallet} from "../../interfaces/wallet/fund.wallet.interface";
 import {Deposit} from "../../database/models/deposit";
 import {Service} from "typedi";
+import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
 
 @Service()
 export class DepositRepository {
-    async create(payload: Partial<IFundWallet>, transaction: any): Promise<object> {
+    async create(payload: Partial<FundWalletRequestDto>, transaction: any): Promise<object> {
         const deposit = await Deposit.create(payload, transaction) as Deposit;
 
         return deposit.dataValues;

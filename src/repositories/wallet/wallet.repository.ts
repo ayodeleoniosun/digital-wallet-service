@@ -1,10 +1,10 @@
-import {IWallet} from "../../interfaces/wallet/wallet.interface";
 import {Wallet} from "../../database/models/wallet";
 import {Service} from "typedi";
+import {CreateWalletRequestDto} from "../../dtos/requests/wallet/create.wallet.request.dto";
 
 @Service()
 export class WalletRepository {
-    async create(payload: Partial<IWallet>): Promise<Wallet> {
+    async create(payload: Partial<CreateWalletRequestDto>): Promise<Wallet> {
         return await Wallet.create(payload);
     }
 

@@ -7,7 +7,6 @@ import {databaseService} from "../../utils/database";
 import {Service} from "typedi";
 import {WithdrawalModelDto} from "../../dtos/models/wallet/withdrawal.model";
 import {DebitWalletRequestDto} from "../../dtos/requests/wallet/debit.wallet.request.dto";
-import {IDebitWallet} from "../../interfaces/wallet/debit.wallet.interface";
 import {generateReference, insufficientBalance} from "../../utils/helpers/tools";
 
 @Service()
@@ -29,7 +28,7 @@ export class WithdrawalService {
                 const totalAmount = amount + fee;
 
                 console.log(wallet.balance, totalAmount);
-                
+
                 const insufficientFunds = insufficientBalance(wallet.balance, totalAmount);
 
                 if (insufficientFunds) {
@@ -40,7 +39,7 @@ export class WithdrawalService {
 
                 payload.reference = generateReference();
 
-                const withdrawal = await this.withdrawalRepository.create(payload as IDebitWallet, {transaction: transaction});
+                const withdrawal = await this.withdrawalRepository.create(payload, {transaction: transaction});
 
                 await this.walletRepository.decrementBalance(wallet, totalAmount, transaction);
 

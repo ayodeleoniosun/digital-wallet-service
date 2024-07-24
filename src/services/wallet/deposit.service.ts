@@ -6,7 +6,6 @@ import * as HttpStatus from 'http-status';
 import {DepositRepository} from "../../repositories/wallet/deposit.repository";
 import {databaseService} from "../../utils/database";
 import {Service} from "typedi";
-import {IFundWallet} from "../../interfaces/wallet/fund.wallet.interface";
 import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
 
 @Service()
@@ -40,7 +39,7 @@ export class DepositService {
 
                 payload.userId = userId;
 
-                const deposit = await this.depositRepository.create(payload as IFundWallet, {transaction: transaction});
+                const deposit = await this.depositRepository.create(payload, {transaction: transaction});
 
                 await this.walletRepository.incrementBalance(wallet, amount, transaction);
 
