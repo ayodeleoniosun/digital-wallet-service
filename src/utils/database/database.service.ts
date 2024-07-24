@@ -7,8 +7,7 @@ export class DatabaseService {
 
     public constructor(public dialect: DialectType) {
         const database = config.environment === 'test' ? config.database.test_name : config.database.name;
-        console.log(database);
-
+        
         this.sequelize = new Sequelize(
             database,
             config.database.username,

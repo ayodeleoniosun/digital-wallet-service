@@ -15,6 +15,7 @@ import {getDeposit} from "../fixtures/deposit.fixture";
 import {FundWalletRequestDto} from "../../src/dtos/requests/wallet/fund.wallet.request.dto";
 import {getTransfer} from "../fixtures/transfer.fixture";
 import {TransferRequestDto} from "../../src/dtos/requests/wallet/transfer.request.dto";
+import {execSync} from "child_process";
 
 describe('Wallet Controller', () => {
     const deposit = getDeposit();
@@ -38,8 +39,8 @@ describe('Wallet Controller', () => {
     let authBaseUrl = null;
 
     beforeAll(async () => {
-        //process.env.NODE_ENV = 'testing';
         await databaseService.authenticate();
+        execSync('npx sequelize-cli db:migrate');
     });
 
     beforeEach(async () => {
