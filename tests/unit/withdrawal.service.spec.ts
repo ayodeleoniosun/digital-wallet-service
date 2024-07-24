@@ -3,13 +3,23 @@ import 'reflect-metadata';
 import {mockWithdrawalRepository} from "../mocks/repositories/withdrawal.mock.repository";
 import {mockWalletRepository} from "../mocks/repositories/wallet.mock.repository";
 import {WalletRepository} from "../../src/repositories/wallet/wallet.repository";
-import withdrawal from "../fixtures/payloads/withdrawal.test.payload";
 import {WithdrawalService} from "../../src/services/wallet/withdrawal.service";
 import {WithdrawalRepository} from "../../src/repositories/wallet/withdrawal.repository";
 import {getWithdrawal} from "../fixtures/withdrawal.fixture";
 import {getWallet} from "../fixtures/wallet.fixture";
 import {WithdrawalModelDto} from "../../src/dtos/models/wallet/withdrawal.model";
 import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.error.messages";
+import {DebitWalletRequestDto} from "../../src/dtos/requests/wallet/debit.wallet.request.dto";
+import {faker} from "@faker-js/faker";
+
+let withdrawal = new DebitWalletRequestDto();
+withdrawal.userId = 1;
+withdrawal.amount = 1000;
+withdrawal.fee = 10;
+withdrawal.reference = faker.string.alphanumeric(12);
+withdrawal.account_number = faker.string.numeric(10);
+withdrawal.account_name = faker.person.fullName();
+withdrawal.bank_name = faker.company.name();
 
 describe('Withdrawals unit tests', () => {
     let withdrawalService: WithdrawalService;

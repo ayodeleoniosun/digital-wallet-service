@@ -3,7 +3,6 @@ import 'reflect-metadata';
 import {mockTransferRepository} from "../mocks/repositories/transfer.mock.repository";
 import {mockWalletRepository} from "../mocks/repositories/wallet.mock.repository";
 import {WalletRepository} from "../../src/repositories/wallet/wallet.repository";
-import transfer from "../fixtures/payloads/transfer.test.payload";
 import {mockAuthRepository} from "../mocks/repositories/auth.mock.repository";
 import {TransferService} from "../../src/services/wallet/transfer.service";
 import {TransferRepository} from "../../src/repositories/wallet/transfer.repository";
@@ -13,6 +12,12 @@ import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.
 import {getWallet} from "../fixtures/wallet.fixture";
 import {getUser} from "../fixtures/user.fixture";
 import {TransferModelDto} from "../../src/dtos/models/wallet/transfer.model";
+import {TransferRequestDto} from "../../src/dtos/requests/wallet/transfer.request.dto";
+import {faker} from "@faker-js/faker";
+
+let transfer = new TransferRequestDto();
+transfer.email = faker.internet.email();
+transfer.amount = 1000;
 
 describe('Transfer unit tests', () => {
     let transferService: TransferService;

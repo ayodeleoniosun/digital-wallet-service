@@ -6,10 +6,21 @@ import {DepositService} from "../../src/services/wallet/deposit.service";
 import {DepositRepository} from "../../src/repositories/wallet/deposit.repository";
 import {WalletRepository} from "../../src/repositories/wallet/wallet.repository";
 import {getDeposit} from "../fixtures/deposit.fixture";
-import deposit from "../fixtures/payloads/deposit.test.payload";
 import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.error.messages";
 import {getWallet} from "../fixtures/wallet.fixture";
 import {DepositModelDto} from "../../src/dtos/models/wallet/deposit.model";
+import {FundWalletRequestDto} from "../../src/dtos/requests/wallet/fund.wallet.request.dto";
+import {faker} from "@faker-js/faker";
+
+
+let deposit = new FundWalletRequestDto();
+deposit.source = 'bank_transfer';
+deposit.userId = 1;
+deposit.amount = 1000;
+deposit.reference = faker.string.alphanumeric(12);
+deposit.account_number = faker.string.numeric(10);
+deposit.account_name = faker.person.fullName();
+deposit.bank_name = faker.company.name();
 
 describe('Deposit unit tests', () => {
     let depositService: DepositService;
@@ -66,7 +77,7 @@ describe('Deposit unit tests', () => {
         mockWalletRepository.incrementBalance.mockResolvedValue(getWallet({balance: newBalance}));
 
         const response = await depositService.execute(mockDepositData.userId, deposit);
-        
+
         expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(1);
         expect(mockDepositRepository.create).toBeCalledTimes(1);
         expect(mockWalletRepository.incrementBalance).toBeCalledTimes(1);
