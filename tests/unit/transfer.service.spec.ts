@@ -15,24 +15,6 @@ import {TransferModelDto} from "../../src/dtos/models/wallet/transfer.model";
 import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.error.messages";
 
 describe('Transfer unit tests', () => {
-    jest.mock('../../src/repositories/authentication/auth.repository', () => {
-        return {
-            AuthRepository: jest.fn().mockImplementation(() => mockAuthRepository)
-        };
-    });
-
-    jest.mock('../../src/repositories/wallet/transfer.repository', () => {
-        return {
-            TransferRepository: jest.fn().mockImplementation(() => mockTransferRepository)
-        };
-    });
-
-    jest.mock('../../src/repositories/wallet/wallet.repository', () => {
-        return {
-            WalletRepository: jest.fn().mockImplementation(() => mockWalletRepository)
-        };
-    });
-
     let transferService: TransferService;
 
     beforeAll(async () => {

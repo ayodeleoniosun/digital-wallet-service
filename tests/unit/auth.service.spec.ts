@@ -13,18 +13,6 @@ import {SignupRequestDto} from "../../src/dtos/requests/authentication/signup.re
 import {LoginRequestDto} from "../../src/dtos/requests/authentication/login.request.dto";
 
 describe('Authentication unit tests', () => {
-    jest.mock('../../src/repositories/authentication/auth.repository', () => {
-        return {
-            AuthRepository: jest.fn().mockImplementation(() => mockAuthRepository)
-        };
-    });
-
-    jest.mock('../mocks/services/jwt.mock.service', () => {
-        return {
-            JwtService: jest.fn().mockImplementation(() => mockJWTService)
-        };
-    });
-
     let authService: AuthService;
 
     beforeAll(async () => {

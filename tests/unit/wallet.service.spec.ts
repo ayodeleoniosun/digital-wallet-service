@@ -7,12 +7,6 @@ import {getWallet} from "../fixtures/wallet.fixture";
 import {WalletModelDto} from "../../src/dtos/models/wallet/wallet.model";
 
 describe('Wallet unit tests', () => {
-    jest.mock('../../src/repositories/wallet/wallet.repository', () => {
-        return {
-            WalletRepository: jest.fn().mockImplementation(() => mockWalletRepository)
-        };
-    });
-
     let walletService: WalletService;
 
     beforeAll(async () => {

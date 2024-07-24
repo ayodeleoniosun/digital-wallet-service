@@ -12,18 +12,6 @@ import {WithdrawalModelDto} from "../../src/dtos/models/wallet/withdrawal.model"
 import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.error.messages";
 
 describe('Withdrawals unit tests', () => {
-    jest.mock('../../src/repositories/wallet/withdrawal.repository', () => {
-        return {
-            WithdrawalRepository: jest.fn().mockImplementation(() => mockWithdrawalRepository)
-        };
-    });
-
-    jest.mock('../../src/repositories/wallet/wallet.repository', () => {
-        return {
-            WalletRepository: jest.fn().mockImplementation(() => mockWalletRepository)
-        };
-    });
-
     let withdrawalService: WithdrawalService;
 
     beforeAll(async () => {

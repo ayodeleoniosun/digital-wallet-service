@@ -14,24 +14,6 @@ import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.
 import {RedisService} from "../../src/services/redis.service";
 
 describe('Deposit unit tests', () => {
-    jest.mock('../../src/repositories/wallet/deposit.repository', () => {
-        return {
-            DepositRepository: jest.fn().mockImplementation(() => mockDepositRepository)
-        };
-    });
-
-    jest.mock('../../src/repositories/wallet/wallet.repository', () => {
-        return {
-            WalletRepository: jest.fn().mockImplementation(() => mockWalletRepository)
-        };
-    });
-
-    jest.mock('../../src/services/redis.service', () => {
-        return {
-            RedisService: jest.fn().mockImplementation(() => mockRedisService)
-        };
-    });
-
     let depositService: DepositService;
 
     beforeAll(async () => {
