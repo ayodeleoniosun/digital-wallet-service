@@ -13,6 +13,8 @@ import {getWithdrawal} from "../fixtures/withdrawal.fixture";
 import {DebitWalletRequestDto} from "../../src/dtos/requests/wallet/debit.wallet.request.dto";
 import {getDeposit} from "../fixtures/deposit.fixture";
 import {FundWalletRequestDto} from "../../src/dtos/requests/wallet/fund.wallet.request.dto";
+import {getTransfer} from "../fixtures/transfer.fixture";
+import {TransferRequestDto} from "../../src/dtos/requests/wallet/transfer.request.dto";
 
 describe('Wallet Controller', () => {
     const deposit = getDeposit();
@@ -33,6 +35,7 @@ describe('Wallet Controller', () => {
 
     let token = null;
     let user = null;
+    let authBaseUrl = null;
 
     beforeAll(async () => {
         //process.env.NODE_ENV = 'testing';
@@ -44,7 +47,7 @@ describe('Wallet Controller', () => {
         await walletRepository.deleteAll();
         await depositRepository.deleteAll();
 
-        const authBaseUrl = '/api/auth';
+        authBaseUrl = '/api/auth';
 
         user = await createUser();
 
@@ -192,10 +195,13 @@ describe('Wallet Controller', () => {
         });
 
         it('it should throw an error if user wallet is already funded', async () => {
+            //create and get wallet
             await request(app)
                 .get(`${baseUrl}`)
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${token}`);
+
+            //attempt to fund wallet twice with the same reference
 
             await request(app)
                 .post(`${baseUrl}/fund`)
@@ -222,6 +228,8 @@ describe('Wallet Controller', () => {
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${token}`);
 
+            //fund wallet twice with the different references
+
             await request(app)
                 .post(`${baseUrl}/fund`)
                 .set('Accept', 'application/json')
@@ -238,6 +246,8 @@ describe('Wallet Controller', () => {
                 .send(payload);
 
             const data = JSON.parse(response.text);
+
+            //get wallet to retrieve new balance
 
             const wallet = await request(app)
                 .get(`${baseUrl}`)
@@ -341,8 +351,6 @@ describe('Wallet Controller', () => {
 
             const data = JSON.parse(response.text);
 
-            console.log(data);
-
             expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
             expect(data.success).toBe(false);
             expect(data.message).toBe(WalletErrorMessages.WALLET_NOT_FOUND);
@@ -376,6 +384,8 @@ describe('Wallet Controller', () => {
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${token}`);
 
+            //fund and withdraw from wallet
+
             await request(app)
                 .post(`${baseUrl}/fund`)
                 .set('Accept', 'application/json')
@@ -389,7 +399,8 @@ describe('Wallet Controller', () => {
                 .send(withdrawalPayload);
 
             const data = JSON.parse(response.text);
-            
+
+            //get wallet to retrieve new balance
             const wallet = await request(app)
                 .get(`${baseUrl}`)
                 .set('Accept', 'application/json')
@@ -402,6 +413,275 @@ describe('Wallet Controller', () => {
             expect(data.message).toBe(WalletSuccessMessages.DEBIT_WALLET_SUCCESSFUL);
             expect(data.data.userId).toBe(user.id);
             expect(getWallet.data.balance).toBe('890');
+        });
+    });
+
+    describe('Transfer Between Wallets', () => {
+        const transfer = getTransfer();
+
+        const transferPayload = new TransferRequestDto();
+        transferPayload.email = 'recipient_email@gmail.com';
+        transferPayload.amount = transfer.amount;
+
+        it('it should throw an error if amount is of negative value', async () => {
+            let payload = JSON.parse(JSON.stringify(transferPayload));
+            payload.amount = -10;
+
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(payload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(WalletErrorMessages.AMOUNT_MUST_BE_POSITIVE);
+        });
+
+        it('it should throw an error if amount is less than N10', async () => {
+            let payload = JSON.parse(JSON.stringify(transferPayload));
+            payload.amount = 2;
+
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(payload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(WalletErrorMessages.MINIMUM_AMOUNT);
+        });
+
+        it('it should throw an error if email is invalid', async () => {
+            let payload = JSON.parse(JSON.stringify(transferPayload));
+            payload.email = 'invalidEmail'
+
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(payload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(AuthErrorMessages.INVALID_EMAIL_SUPPLIED);
+        });
+
+        it('it should throw an error if sender wallet does not exist', async () => {
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(transferPayload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(WalletErrorMessages.WALLET_NOT_FOUND);
+        });
+
+        it('it should throw an error if sender has insufficient funds', async () => {
+            await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`);
+
+            let payload = JSON.parse(JSON.stringify(transferPayload));
+            payload.amount = 2000;
+
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(payload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.BAD_REQUEST);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(WalletErrorMessages.INSUFFICIENT_FUNDS);
+        });
+
+        it('it should throw an error if recipient does not exist', async () => {
+            //create and get wallet
+
+            await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`);
+
+            let payload = JSON.parse(JSON.stringify(fundWalletPayload));
+            payload.amount = 3000;
+
+            //fund and attempt to transfer funds to a non-existing recipient
+
+            await request(app)
+                .post(`${baseUrl}/fund`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(payload);
+
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(transferPayload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(WalletErrorMessages.RECIPIENT_NOT_FOUND);
+        });
+
+        it('it should throw an error if recipient wallet does not exist', async () => {
+            await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`);
+
+            //fund and attempt to transfer funds to sender's wallet
+
+            let fundPayload = JSON.parse(JSON.stringify(fundWalletPayload));
+            fundPayload.amount = 3000;
+
+            await request(app)
+                .post(`${baseUrl}/fund`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(fundPayload);
+
+            //create recipient account
+            await createUser({email: transferPayload.email});
+
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(transferPayload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(WalletErrorMessages.RECIPIENT_WALLET_NOT_FOUND);
+        });
+
+        it('it should throw an error if sender attempts to transfer to his or her wallet', async () => {
+            await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`);
+
+            //fund and attempt to transfer funds to sender's wallet
+
+            let fundPayload = JSON.parse(JSON.stringify(fundWalletPayload));
+            fundPayload.amount = 3000;
+
+            await request(app)
+                .post(`${baseUrl}/fund`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(fundPayload);
+
+            let payload = JSON.parse(JSON.stringify(transferPayload));
+            payload.email = user.email;
+
+            const response = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(payload);
+
+            const data = JSON.parse(response.text);
+
+            expect(response.statusCode).toBe(HttpStatus.BAD_REQUEST);
+            expect(data.success).toBe(false);
+            expect(data.message).toBe(WalletErrorMessages.FORBIDDEN_TRANSFER);
+        });
+
+        it('it should transfer funds to recipient wallet, decrement sender wallet and increment recipient balance', async () => {
+            await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`);
+
+            //create recipient account, login to generate token and create wallet
+            const recipient = await createUser({email: transferPayload.email});
+
+            const loginResponse = await request(app)
+                .post(`${authBaseUrl}/login`)
+                .set('Accept', 'application/json')
+                .send({
+                    email: recipient.email,
+                    password: validPassword
+                });
+
+            const loginData = JSON.parse(loginResponse.text);
+
+            const recipientToken = loginData.data.token;
+
+            await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${recipientToken}`);
+
+            //fund and transfer funds to sender's wallet
+            let fundPayload = JSON.parse(JSON.stringify(fundWalletPayload));
+            fundPayload.amount = 3000;
+
+            await request(app)
+                .post(`${baseUrl}/fund`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(fundPayload);
+
+            let transferRequest = JSON.parse(JSON.stringify(transferPayload));
+            transferRequest.email = recipient.email;
+
+            const transferResponse = await request(app)
+                .post(`${baseUrl}/transfer`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send(transferRequest);
+
+            /*
+                after the transfer, sender wallet should have been decremented to 2000
+                and recipient wallet incremented to 1000
+            */
+
+            const transferData = JSON.parse(transferResponse.text);
+
+            //get sender Wallet
+            const senderWallet = await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${token}`);
+
+            const getSenderWallet = JSON.parse(senderWallet.text);
+
+            //get recipient Wallet
+            const recipientWallet = await request(app)
+                .get(`${baseUrl}`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${recipientToken}`);
+
+            const getRecipientWallet = JSON.parse(recipientWallet.text);
+
+            expect(transferResponse.statusCode).toBe(HttpStatus.CREATED);
+            expect(transferData.success).toBe(true);
+            expect(transferData.message).toBe(WalletSuccessMessages.TRANSFER_SUCCESSFUL);
+            expect(transferData.data.recipient).toBe(transferRequest.email);
+            expect(getSenderWallet.data.balance).toBe('2000');
+            expect(getRecipientWallet.data.balance).toBe('1000');
         });
     });
 });

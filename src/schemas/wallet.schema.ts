@@ -1,6 +1,7 @@
 import {WalletErrorMessages} from "../utils/enums/messages/wallet/wallet.error.messages";
 import {SourceType} from "../dtos/models/wallet/deposit.model";
 import {AuthErrorMessages} from "../utils/enums/messages/authentication/auth.error.messages";
+import config from "../config";
 
 const Joi = require('joi');
 
@@ -17,7 +18,7 @@ export function fundWalletSchema() {
         amount: Joi.number()
             .required()
             .positive()
-            .min(10)
+            .min(parseInt(config.transaction.minimum_amount))
             .messages({
                 "string.empty": WalletErrorMessages.AMOUNT_CANNOT_BE_EMPTY,
                 "any.required": WalletErrorMessages.AMOUNT_REQUIRED,
@@ -63,7 +64,7 @@ export function debitWalletSchema() {
         amount: Joi.number()
             .required()
             .positive()
-            .min(10)
+            .min(parseInt(config.transaction.minimum_amount))
             .messages({
                 "string.empty": WalletErrorMessages.AMOUNT_CANNOT_BE_EMPTY,
                 "any.required": WalletErrorMessages.AMOUNT_REQUIRED,
@@ -73,7 +74,7 @@ export function debitWalletSchema() {
         fee: Joi.number()
             .required()
             .positive()
-            .min(10)
+            .min(parseInt(config.transaction.minimum_fee))
             .messages({
                 "string.empty": WalletErrorMessages.FEE_CANNOT_BE_EMPTY,
                 "any.required": WalletErrorMessages.FEE_REQUIRED,
@@ -111,7 +112,7 @@ export function transferSchema() {
         amount: Joi.number()
             .required()
             .positive()
-            .min(10)
+            .min(parseInt(config.transaction.minimum_amount))
             .messages({
                 "string.empty": WalletErrorMessages.AMOUNT_CANNOT_BE_EMPTY,
                 "any.required": WalletErrorMessages.AMOUNT_REQUIRED,

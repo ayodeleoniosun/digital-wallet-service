@@ -6,7 +6,6 @@ export default {
     port: process.env.APP_PORT,
     jwt_secret: process.env.JWT_SECRET,
     redis_uri: process.env.REDIS_ENDPOINT_URI,
-    transaction_reference_prefix: process.env.TRANSACTION_REFERENCE_PREFIX,
     database: {
         name: process.env.DB_DATABASE,
         username: process.env.DB_USERNAME,
@@ -20,5 +19,10 @@ export default {
         host: process.env.MAIL_HOST,
         port: process.env.MAIL_PORT,
         from_address: process.env.MAIL_FROM_ADDRESS
+    },
+    transaction: {
+        reference_prefix: process.env.TRANSACTION_REFERENCE_PREFIX,
+        minimum_amount: process.env.MINIMUM_AMOUNT,
+        minimum_fee: process.env.MINIMUM_FEE
     }
 }

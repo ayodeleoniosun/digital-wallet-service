@@ -42,7 +42,7 @@ export class TransferService {
                 }
 
                 if (recipient.id === senderId) {
-                    throw new HttpException(WalletErrorMessages.FORBIDDEN_TRANSFER, HttpStatus.NOT_FOUND);
+                    throw new HttpException(WalletErrorMessages.FORBIDDEN_TRANSFER, HttpStatus.BAD_REQUEST);
                 }
 
                 const recipientWallet = await this.walletRepository.lockForUpdate(recipient.id, transaction);

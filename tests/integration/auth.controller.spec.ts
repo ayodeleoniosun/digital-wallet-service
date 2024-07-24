@@ -49,8 +49,7 @@ describe('Authentication Controller', () => {
                 .send(payload);
 
             const data = JSON.parse(response.text);
-            console.log(data);
-
+            
             expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
             expect(data.success).toBe(false);
             expect(data.message).toBe(AuthErrorMessages.INVALID_EMAIL_SUPPLIED);
@@ -100,8 +99,6 @@ describe('Authentication Controller', () => {
                 .send(payload);
 
             const data = JSON.parse(response.text);
-
-            console.log(data);
 
             expect(response.statusCode).toBe(HttpStatus.CREATED);
             expect(data.success).toBe(true);

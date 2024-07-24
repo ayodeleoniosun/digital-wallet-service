@@ -11,7 +11,7 @@ export const comparePassword = (password: string, userPassword: string) => {
 }
 
 export const generateReference = (): string => {
-    return config.transaction_reference_prefix + crypto.randomBytes(12).toString('hex');
+    return config.transaction.reference_prefix + crypto.randomBytes(12).toString('hex');
 }
 
 export const insufficientBalance = (balance: number, amount: number): boolean => {
