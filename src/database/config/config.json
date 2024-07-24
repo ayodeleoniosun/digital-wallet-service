@@ -3,21 +3,21 @@
     "username": "root",
     "password": "root",
     "database": "wallet_service_db",
-    "host": "database",
+    "host": "production_database",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "root",
-    "database": "wallet_service_db",
-    "host": "database",
+    "database": "wallet_service_test",
+    "host": "test_database",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "root",
     "database": "wallet_service_db",
-    "host": "database",
+    "host": "production_database",
     "dialect": "mysql"
   }
 }

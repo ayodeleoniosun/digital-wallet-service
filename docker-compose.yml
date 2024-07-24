@@ -1,28 +1,29 @@
 version: '3.8'
 
 services:
-  app:
+  production_app:
     build: ./
-    container_name: app
+    container_name: production_app
     image: node-app
     env_file: ./.env
     ports:
       - '3001:3001'
     environment:
       - APP_PORT=$APP_PORT
+      - NODE_ENV=$NODE_ENV
       - DB_HOST=$DB_HOST
       - DB_USER=$DB_USERNAME
       - DB_PASSWORD=$DB_PASSWORD
       - DB_NAME=$DB_NAME
     depends_on:
-      - database
-      - redis
+      - production_database
+      - production_redis
     volumes:
       - .:/app
 
-  database:
+  production_database:
     image: mysql:8
-    container_name: database
+    container_name: production_database
     restart: always
     env_file: ./.env
     ports:
@@ -31,13 +32,55 @@ services:
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_DATABASE=$DB_NAME
     volumes:
-      - db:/var/lib/mysql
+      - production_db:/var/lib/mysql
 
-  redis:
+  production_redis:
     image: redis
-    container_name: redis
+    container_name: production_redis
     ports:
       - "6379:6379"
 
+
+  test_app:
+    build: ./
+    container_name: test_app
+    image: node-app
+    env_file: ./.env.test
+    ports:
+      - '3002:3001'
+    environment:
+      - APP_PORT=3002
+      - NODE_ENV=test
+      - DB_HOST=test_database
+      - DB_USER=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=wallet_service_test
+    depends_on:
+      - test_database
+      - test_redis
+    volumes:
+      - .:/test
+
+  test_database:
+    image: mysql:8
+    container_name: test_database
+    restart: always
+    env_file: ./.env.test
+    ports:
+      - '3308:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=wallet_service_test
+    volumes:
+      - test_db:/var/lib/mysql
+
+  test_redis:
+    image: redis
+    container_name: test_redis
+    ports:
+      - "6380:6379"
+
 volumes:
-  db:
+  production_db:
+  test_db:
+    driver: local

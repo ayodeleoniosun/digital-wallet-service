@@ -9,6 +9,8 @@ export const RateLimiterMiddleware = (options: any) => {
     let limit: number;
     let message: string;
 
+    console.log(config.environment);
+    
     if (config.environment === 'test') {
         windowMs = 2 * 60 * 1000; //2 minutes;
         limit = 10; //max of 10 requests in 2 minutes

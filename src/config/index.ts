@@ -9,7 +9,6 @@ export default {
     redis_uri: process.env.REDIS_ENDPOINT_URI,
     database: {
         name: process.env.DB_NAME,
-        test_name: process.env.TEST_DB_NAME,
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         host: process.env.DB_HOST,
