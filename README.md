@@ -55,9 +55,9 @@ available [Here](https://documenter.getpostman.com/view/18037473/2sA3kVk1gB#6bd0
 
 ### Testing
 
-An end-to-end test and unit tests are written for the routes and services. <br/>
+An integration and unit tests are written for the controllers and services. <br/>
 
-To run test, use the following command:
+To run tests, use the following command:
 
 ```bash
 docker-compose exec test_app npm run test
