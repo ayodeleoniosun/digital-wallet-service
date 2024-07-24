@@ -41,6 +41,10 @@ cd be-ayodele-oniosun
 bash setup.sh
 ```
 
+## Database Schema
+
+![architecture](./docs/database-schema.png)
+
 ### API Documentation
 
 The Postman API collection is locally available [Here](./docs/postman_collection.json). <br/>
