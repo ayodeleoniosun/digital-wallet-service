@@ -3,7 +3,7 @@ import HttpException from "../../utils/exceptions/http.exception";
 import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.error.messages";
 import * as HttpStatus from 'http-status';
 import {databaseService} from "../../utils/database";
-import {Service} from "typedi";
+import {Container, Service} from "typedi";
 import {TransferRepository} from "../../repositories/wallet/transfer.repository";
 import {AuthRepository} from "../../repositories/authentication/auth.repository";
 import {TransferModelDto} from "../../dtos/models/wallet/transfer.model";
@@ -12,12 +12,9 @@ import {generateReference, insufficientBalance} from "../../utils/helpers/tools"
 
 @Service()
 export class TransferService {
-    constructor(
-        public walletRepository: WalletRepository,
-        public authRepository: AuthRepository,
-        public transferRepository: TransferRepository
-    ) {
-    }
+    public walletRepository = Container.get(WalletRepository);
+    public authRepository = Container.get(AuthRepository);
+    public transferRepository = Container.get(TransferRepository);
 
     async execute(senderId: number, payload: TransferRequestDto): Promise<TransferModelDto> {
         const {amount, email} = payload;

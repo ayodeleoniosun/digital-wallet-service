@@ -1,11 +1,10 @@
 import {WalletRepository} from "../../repositories/wallet/wallet.repository";
 import {WalletModelDto} from "../../dtos/models/wallet/wallet.model";
-import {Service} from "typedi";
+import {Container, Service} from "typedi";
 
 @Service()
 export class WalletService {
-    constructor(public walletRepository: WalletRepository) {
-    }
+    public walletRepository = Container.get(WalletRepository);
 
     async getUserWallet(userId: number): Promise<WalletModelDto> {
         const getWallet = await this.walletRepository.getWallet(userId);

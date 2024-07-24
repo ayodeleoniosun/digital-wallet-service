@@ -4,7 +4,7 @@ import * as HttpStatus from 'http-status';
 import {AuthSuccessMessages} from '../utils/enums/messages/authentication/auth.success.messages';
 import {ResponseDto} from "../dtos/responses/response.dto";
 import {Body, JsonController, Post, Res} from "routing-controllers";
-import {Service} from "typedi";
+import {Container, Service} from "typedi";
 import {ValidationService} from "../services/validation.service";
 import {SignupRequestDto} from "../dtos/requests/authentication/signup.request.dto";
 import {LoginRequestDto} from "../dtos/requests/authentication/login.request.dto";
@@ -13,8 +13,8 @@ import {loginSchema, registrationSchema} from "../schemas/auth.schema";
 @JsonController('/auth')
 @Service()
 export class AuthController {
-    public constructor(private authService: AuthService, public validationService: ValidationService) {
-    }
+    public authService = Container.get(AuthService);
+    public validationService = Container.get(ValidationService);
 
     @Post('/register')
     async register(@Body() signupDto: SignupRequestDto, @Res() res: Response) {

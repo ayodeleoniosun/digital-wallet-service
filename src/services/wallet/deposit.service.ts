@@ -5,13 +5,13 @@ import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.erro
 import * as HttpStatus from 'http-status';
 import {DepositRepository} from "../../repositories/wallet/deposit.repository";
 import {databaseService} from "../../utils/database";
-import {Service} from "typedi";
+import {Container, Service} from "typedi";
 import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
 
 @Service()
 export class DepositService {
-    constructor(public walletRepository: WalletRepository, public depositRepository: DepositRepository) {
-    }
+    public walletRepository = Container.get(WalletRepository);
+    public depositRepository = Container.get(DepositRepository);
 
     async depositAlreadyCompleted(reference: string): Promise<boolean> {
         const checkFundedInDB = await this.depositRepository.getDepositByReference(reference);

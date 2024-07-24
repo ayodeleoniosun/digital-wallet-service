@@ -4,15 +4,15 @@ import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.erro
 import {WithdrawalRepository} from "../../repositories/wallet/withdrawal.repository";
 import * as HttpStatus from 'http-status';
 import {databaseService} from "../../utils/database";
-import {Service} from "typedi";
+import {Container, Service} from "typedi";
 import {WithdrawalModelDto} from "../../dtos/models/wallet/withdrawal.model";
 import {DebitWalletRequestDto} from "../../dtos/requests/wallet/debit.wallet.request.dto";
 import {generateReference, insufficientBalance} from "../../utils/helpers/tools";
 
 @Service()
 export class WithdrawalService {
-    constructor(public walletRepository: WalletRepository, public withdrawalRepository: WithdrawalRepository) {
-    }
+    public walletRepository = Container.get(WalletRepository);
+    public withdrawalRepository = Container.get(WithdrawalRepository);
 
     async execute(userId: number, payload: DebitWalletRequestDto): Promise<WithdrawalModelDto> {
         const {amount, fee} = payload;

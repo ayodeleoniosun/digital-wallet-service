@@ -3,7 +3,7 @@ import {ResponseDto} from "../dtos/responses/response.dto";
 import * as HttpStatus from 'http-status';
 import {WalletSuccessMessages} from "../utils/enums/messages/wallet/wallet.success.messages";
 import {Body, CurrentUser, Get, JsonController, Post, Res} from "routing-controllers";
-import {Service} from "typedi";
+import {Container, Service} from "typedi";
 import {User} from "../database/models/user";
 import {ValidationService} from "../services/validation.service";
 import {WalletService} from "../services/wallet/wallet.service";
@@ -18,14 +18,12 @@ import {debitWalletSchema, fundWalletSchema, transferSchema} from "../schemas/wa
 @JsonController('/wallets')
 @Service()
 export class WalletController {
-    public constructor(
-        private depositService: DepositService,
-        private withdrawalService: WithdrawalService,
-        private transferService: TransferService,
-        private walletService: WalletService,
-        public validationService: ValidationService) {
-    }
-
+    public depositService = Container.get(DepositService);
+    public withdrawalService = Container.get(WithdrawalService);
+    public transferService = Container.get(TransferService);
+    public validationService = Container.get(ValidationService);
+    public walletService = Container.get(WalletService);
+    
     @Get('/')
     async getWallet(@Body() req: Request, @Res() res: Response, @CurrentUser() user?: User) {
         try {
