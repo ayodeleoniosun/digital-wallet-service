@@ -3,19 +3,19 @@ import app from '../../src/app';
 import * as HttpStatus from 'http-status';
 import {databaseService} from "../../src/utils/database";
 import {faker} from "@faker-js/faker";
+import {validEmail, validPassword} from "../factories/user.factory";
 import {AuthErrorMessages} from "../../src/utils/enums/messages/authentication/auth.error.messages";
 import {AuthSuccessMessages} from "../../src/utils/enums/messages/authentication/auth.success.messages";
 import {AuthRepository} from "../../src/repositories/authentication/auth.repository";
 
 describe('Authentication Controller', () => {
     const authRepository = new AuthRepository();
-    const validEmail = 'valid_email@gmail.com';
 
     let registerPayload = {
         firstname: faker.internet.displayName(),
         lastname: faker.internet.displayName(),
         email: faker.internet.email(),
-        password: 'JohnDoe@2024',
+        password: validPassword,
     };
 
     let loginPayload = {
@@ -26,11 +26,13 @@ describe('Authentication Controller', () => {
     beforeAll(async () => {
         //process.env.NODE_ENV = 'testing';
         await databaseService.authenticate();
-        await authRepository.delete(validEmail);
+    });
+
+    beforeEach(async () => {
+        await authRepository.deleteAll();
     });
 
     afterAll(async () => {
-        await authRepository.delete(validEmail);
         await databaseService.close();
     });
 

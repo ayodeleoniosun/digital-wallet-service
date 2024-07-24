@@ -1,6 +1,7 @@
 import {Wallet} from "../../database/models/wallet";
 import {Service} from "typedi";
 import {CreateWalletRequestDto} from "../../dtos/requests/wallet/create.wallet.request.dto";
+import {databaseService} from "../../utils/database";
 
 @Service()
 export class WalletRepository {
@@ -34,5 +35,10 @@ export class WalletRepository {
             'balance',
             {by: amount, transaction: transaction}
         );
+    }
+
+    async deleteAll() {
+        await databaseService.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+        await Wallet.truncate({cascade: true});
     }
 }

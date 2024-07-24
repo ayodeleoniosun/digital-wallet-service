@@ -27,8 +27,6 @@ export class WithdrawalService {
 
                 const totalAmount = amount + fee;
 
-                console.log(wallet.balance, totalAmount);
-
                 const insufficientFunds = insufficientBalance(wallet.balance, totalAmount);
 
                 if (insufficientFunds) {
@@ -47,7 +45,7 @@ export class WithdrawalService {
             });
 
         } catch (error: any) {
-            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(error.message, error.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

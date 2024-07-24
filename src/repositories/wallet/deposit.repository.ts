@@ -1,6 +1,7 @@
 import {Deposit} from "../../database/models/deposit";
 import {Service} from "typedi";
 import {FundWalletRequestDto} from "../../dtos/requests/wallet/fund.wallet.request.dto";
+import {databaseService} from "../../utils/database";
 
 @Service()
 export class DepositRepository {
@@ -13,6 +14,11 @@ export class DepositRepository {
     async getDepositByReference(reference: string): Promise<object> {
         return (await Deposit.findOne({
             where: {reference}
-        })).dataValues;
+        }));
+    }
+
+    async deleteAll() {
+        await databaseService.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+        await Deposit.truncate({cascade: true});
     }
 }

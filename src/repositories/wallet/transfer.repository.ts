@@ -2,6 +2,7 @@ import {Service} from "typedi";
 import {Transfer} from "../../database/models/transfer";
 import {User} from "../../database/models/user";
 import {TransferRequestDto} from "../../dtos/requests/wallet/transfer.request.dto";
+import {databaseService} from "../../utils/database";
 
 @Service()
 export class TransferRepository {
@@ -21,5 +22,10 @@ export class TransferRepository {
                 as: 'recipient'
             }]
         })).dataValues;
+    }
+
+    async deleteAll() {
+        await databaseService.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+        await Transfer.truncate({cascade: true});
     }
 }

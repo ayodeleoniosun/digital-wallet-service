@@ -23,7 +23,7 @@ export class WalletController {
     public transferService = Container.get(TransferService);
     public validationService = Container.get(ValidationService);
     public walletService = Container.get(WalletService);
-    
+
     @Get('/')
     async getWallet(@Body() req: Request, @Res() res: Response, @CurrentUser() user?: User) {
         try {
