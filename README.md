@@ -8,7 +8,6 @@ This is scalable, performant and reliable RESTful API that allow users to perfor
 * Fund user wallet.
 * Withdraw from user wallet
 * Transfer between wallets.
-* Sending of email notifications for each operation
 
 ### Technologies Stack
 
@@ -28,7 +27,7 @@ git clone https://gitlab.com/kora-assessment/be-ayodele-oniosun.git
 #### Step 2: Switch to the repo folder
 
 ```shell
-cd digital-wallet-service
+cd be-ayodele-oniosun
 ```
 
 #### Step 3: Setup environment variable
