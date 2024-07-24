@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import {ResponseDto} from "../dtos/responses/response.dto";
 import * as HttpStatus from 'http-status';
 import {WalletSuccessMessages} from "../utils/enums/messages/wallet/wallet.success.messages";
-import {Body, CurrentUser, Get, JsonController, Post, Res} from "routing-controllers";
+import {Body, CurrentUser, Get, JsonController, Post, Res, UseBefore} from "routing-controllers";
 import {Container, Service} from "typedi";
 import {User} from "../database/models/user";
 import {ValidationService} from "../services/validation.service";
@@ -14,6 +14,7 @@ import {FundWalletRequestDto} from "../dtos/requests/wallet/fund.wallet.request.
 import {DebitWalletRequestDto} from "../dtos/requests/wallet/debit.wallet.request.dto";
 import {TransferRequestDto} from "../dtos/requests/wallet/transfer.request.dto";
 import {debitWalletSchema, fundWalletSchema, transferSchema} from "../schemas/wallet.schema";
+import {RateLimiterMiddleware} from "../middlewares/rate.limiter.middleware";
 
 @JsonController('/wallets')
 @Service()
@@ -57,6 +58,10 @@ export class WalletController {
     }
 
     @Post('/withdraw')
+    @UseBefore(RateLimiterMiddleware({
+            message: 'You cannot initiate more than 1 withdrawal in 10 seconds. Try again',
+        }
+    ))
     async debit(@Body() debitWalletRequestDto: DebitWalletRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
             this.validationService.validatePayload(debitWalletRequestDto, debitWalletSchema());
@@ -74,6 +79,10 @@ export class WalletController {
     }
 
     @Post('/transfer')
+    @UseBefore(RateLimiterMiddleware({
+            message: 'You cannot initiate more than 1 transfer in 10 seconds. Try again'
+        }
+    ))
     async transfer(@Body() transferRequestDto: TransferRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
             this.validationService.validatePayload(transferRequestDto, transferSchema());

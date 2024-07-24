@@ -59,11 +59,3 @@ To run test, use the following command:
 ```bash
 docker-compose exec wallet_app npm run test
 ```
-
-### Database Schema Diagram
-
-Update coming soon as addon
-
-### Testing concurrency with JMeter
-
-Update coming soon as addon

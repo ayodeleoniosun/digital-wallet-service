@@ -378,7 +378,7 @@ describe('Wallet Controller', () => {
             expect(data.success).toBe(false);
             expect(data.message).toBe(WalletErrorMessages.INSUFFICIENT_FUNDS);
         });
-
+        
         it('it should debit user wallet and decrement balance', async () => {
             await request(app)
                 .get(`${baseUrl}`)

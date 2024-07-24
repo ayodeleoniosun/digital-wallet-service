@@ -6,7 +6,6 @@ import {databaseService} from "../../utils/database";
 @Service()
 export class AuthRepository {
     async create(payload: Partial<SignupRequestDto>): Promise<User> {
-        await this.deleteAll();
         return await User.create(payload);
     }
 
