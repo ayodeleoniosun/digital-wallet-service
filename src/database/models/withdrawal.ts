@@ -69,6 +69,7 @@ Withdrawal.init({
     },
 }, {
     sequelize,
+    tableName: 'withdrawals',
     modelName: 'Withdrawal',
     timestamps: true,
 });

@@ -60,6 +60,7 @@ Transfer.init({
     },
 }, {
     sequelize,
+    tableName: 'transfers',
     modelName: 'Transfer',
     timestamps: true,
 });

@@ -46,6 +46,7 @@ Wallet.init({
     },
 }, {
     sequelize,
+    tableName: 'wallets',
     modelName: 'Wallet',
     timestamps: true,
 });

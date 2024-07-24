@@ -19,8 +19,6 @@ services:
       - redis
     volumes:
       - .:/app
-    networks:
-      - node-network
 
   database:
     image: mysql:8
@@ -34,20 +32,12 @@ services:
       - MYSQL_DATABASE=$DB_NAME
     volumes:
       - db:/var/lib/mysql
-    networks:
-      - node-network
 
   redis:
     image: redis
     container_name: redis
     ports:
       - "6379:6379"
-    networks:
-      - node-network
 
 volumes:
   db:
-
-networks:
-  node-network:
-    driver: bridge

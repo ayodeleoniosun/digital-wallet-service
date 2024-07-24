@@ -80,6 +80,7 @@ Deposit.init({
     },
 }, {
     sequelize,
+    tableName: 'deposits',
     modelName: 'Deposit',
     timestamps: true,
 });
