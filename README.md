@@ -8,9 +8,7 @@ This is scalable, performant and reliable RESTful API that allow users to perfor
 * Fund user wallet.
 * Withdraw from user wallet
 * Transfer between wallets.
-* View accounting summary. (coming soon as addon)
-* View deposit, withdrawals and transaction details. (coming soon as addon)
-* Sending of email notifications for each operation (coming soon)
+* Sending of email notifications for each operation
 
 ### Technologies Stack
 
