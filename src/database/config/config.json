@@ -2,22 +2,22 @@
   "development": {
     "username": "root",
     "password": "root",
-    "database": "wallet_db",
-    "host": "database",
+    "database": "wallet_service",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "root",
-    "database": "wallet_db",
-    "host": "database",
+    "database": "wallet_service",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "root",
-    "database": "wallet_db",
-    "host": "database",
+    "database": "wallet_service",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   }
 }

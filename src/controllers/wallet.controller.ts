@@ -13,6 +13,7 @@ import {TransferService} from "../services/wallet/transfer.service";
 import {FundWalletRequestDto} from "../dtos/requests/wallet/fund.wallet.request.dto";
 import {DebitWalletRequestDto} from "../dtos/requests/wallet/debit.wallet.request.dto";
 import {TransferRequestDto} from "../dtos/requests/wallet/transfer.request.dto";
+import {debitWalletSchema, fundWalletSchema, transferSchema} from "../schemas/wallet.schema";
 
 @JsonController('/wallets')
 @Service()
@@ -43,7 +44,7 @@ export class WalletController {
     @Post('/fund')
     async fund(@Body() fundWalletRequestDto: FundWalletRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
-            this.validationService.validatePayload(fundWalletRequestDto, 'fund-wallet');
+            this.validationService.validatePayload(fundWalletRequestDto, fundWalletSchema());
 
             const wallet = await this.depositService.execute(user.id, fundWalletRequestDto);
 
@@ -60,7 +61,7 @@ export class WalletController {
     @Post('/withdraw')
     async debit(@Body() debitWalletRequestDto: DebitWalletRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
-            this.validationService.validatePayload(debitWalletRequestDto, 'debit-wallet');
+            this.validationService.validatePayload(debitWalletRequestDto, debitWalletSchema());
 
             const wallet = await this.withdrawalService.execute(user.id, debitWalletRequestDto);
 
@@ -77,7 +78,7 @@ export class WalletController {
     @Post('/transfer')
     async transfer(@Body() transferRequestDto: TransferRequestDto, @Res() res: Response, @CurrentUser() user?: User) {
         try {
-            this.validationService.validatePayload(transferRequestDto, 'transfer');
+            this.validationService.validatePayload(transferRequestDto, transferSchema());
 
             const transfer = await this.transferService.execute(user.id, transferRequestDto);
 
