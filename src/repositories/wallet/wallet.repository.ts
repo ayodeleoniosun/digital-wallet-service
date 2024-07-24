@@ -35,8 +35,4 @@ export class WalletRepository {
             {by: amount, transaction: transaction}
         );
     }
-
-    async insufficientFunds(wallet: Wallet, amount: number): Promise<boolean> {
-        return await wallet.dataValues.balance < amount;
-    }
 }

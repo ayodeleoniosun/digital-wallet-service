@@ -4,12 +4,11 @@ import {WalletErrorMessages} from "../../utils/enums/messages/wallet/wallet.erro
 import * as HttpStatus from 'http-status';
 import {databaseService} from "../../utils/database";
 import {Service} from "typedi";
-import * as crypto from "crypto";
 import {TransferRepository} from "../../repositories/wallet/transfer.repository";
 import {AuthRepository} from "../../repositories/authentication/auth.repository";
 import {TransferModelDto} from "../../dtos/models/wallet/transfer.model";
-import config from "../../config";
 import {TransferRequestDto} from "../../dtos/requests/wallet/transfer.request.dto";
+import {generateReference, insufficientBalance} from "../../utils/helpers/tools";
 
 @Service()
 export class TransferService {
@@ -33,7 +32,7 @@ export class TransferService {
                     throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
                 }
 
-                const insufficientFunds = await this.walletRepository.insufficientFunds(senderWallet, amount);
+                const insufficientFunds = insufficientBalance(senderWallet.balance, amount);
 
                 if (insufficientFunds) {
                     throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
@@ -57,7 +56,7 @@ export class TransferService {
 
                 payload.senderId = senderId;
                 payload.recipientId = recipient.id;
-                payload.reference = config.transaction_reference_prefix + crypto.randomBytes(12).toString('hex');
+                payload.reference = generateReference();
 
                 transfer = await this.transferRepository.create(payload as TransferRequestDto, {transaction: transaction});
 

@@ -6,10 +6,9 @@ import * as HttpStatus from 'http-status';
 import {databaseService} from "../../utils/database";
 import {Service} from "typedi";
 import {WithdrawalModelDto} from "../../dtos/models/wallet/withdrawal.model";
-import * as crypto from "crypto";
-import config from "../../config";
 import {DebitWalletRequestDto} from "../../dtos/requests/wallet/debit.wallet.request.dto";
 import {IDebitWallet} from "../../interfaces/wallet/debit.wallet.interface";
+import {generateReference, insufficientBalance} from "../../utils/helpers/tools";
 
 @Service()
 export class WithdrawalService {
@@ -29,7 +28,9 @@ export class WithdrawalService {
 
                 const totalAmount = amount + fee;
 
-                const insufficientFunds = await this.walletRepository.insufficientFunds(wallet, totalAmount);
+                console.log(wallet.balance, totalAmount);
+                
+                const insufficientFunds = insufficientBalance(wallet.balance, totalAmount);
 
                 if (insufficientFunds) {
                     throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
@@ -37,7 +38,7 @@ export class WithdrawalService {
 
                 payload.userId = userId;
 
-                payload.reference = config.transaction_reference_prefix + crypto.randomBytes(12).toString('hex');
+                payload.reference = generateReference();
 
                 const withdrawal = await this.withdrawalRepository.create(payload as IDebitWallet, {transaction: transaction});
 

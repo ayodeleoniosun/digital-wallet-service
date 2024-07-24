@@ -4,5 +4,4 @@ export const mockWalletRepository = {
     lockForUpdate: jest.fn(),
     incrementBalance: jest.fn(),
     decrementBalance: jest.fn(),
-    insufficientFunds: jest.fn(),
 }

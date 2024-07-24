@@ -14,7 +14,7 @@ import {faker} from "@faker-js/faker";
 
 let withdrawal = new DebitWalletRequestDto();
 withdrawal.userId = 1;
-withdrawal.amount = 1000;
+withdrawal.amount = 100;
 withdrawal.fee = 10;
 withdrawal.reference = faker.string.alphanumeric(12);
 withdrawal.account_number = faker.string.numeric(10);
@@ -54,23 +54,22 @@ describe('Withdrawals unit tests', () => {
         withdrawal.amount = 2000;
         const mockWithdrawalData = getWithdrawal({amount: withdrawal.amount});
         mockWalletRepository.lockForUpdate.mockResolvedValue(getWallet());
-        mockWalletRepository.insufficientFunds.mockResolvedValue(true);
 
         try {
             await withdrawalService.execute(mockWithdrawalData.userId, withdrawal);
         } catch (error: any) {
             expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(1);
-            expect(mockWalletRepository.insufficientFunds).toBeCalledTimes(1);
             expect(error.message).toBe(WalletErrorMessages.INSUFFICIENT_FUNDS);
         }
     });
 
     it('it should debit user wallet and decrement balance', async () => {
+        withdrawal.amount = 100;
         const mockWithdrawalData = getWithdrawal();
         mockWalletRepository.lockForUpdate.mockResolvedValue(getWallet());
         mockWithdrawalRepository.create.mockResolvedValue(mockWithdrawalData);
 
-        const newBalance = getWallet().balance - withdrawal.amount;
+        const newBalance = getWallet().balance - (withdrawal.amount + withdrawal.fee);
         mockWalletRepository.decrementBalance.mockResolvedValue(getWallet({balance: newBalance}));
 
         const response = await withdrawalService.execute(mockWithdrawalData.userId, withdrawal);

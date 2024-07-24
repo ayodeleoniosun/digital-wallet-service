@@ -44,8 +44,6 @@ export class DepositService {
 
                 await this.walletRepository.incrementBalance(wallet, amount, transaction);
 
-                console.log(deposit);
-
                 return new DepositModelDto(deposit);
             });
 

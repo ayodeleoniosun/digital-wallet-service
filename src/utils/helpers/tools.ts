@@ -1,11 +1,21 @@
 import bcrypt from "bcryptjs";
+import config from "../../config";
+import crypto from "crypto";
 
-export const hashPassword = (password: string) => {
+export const hashPassword = (password: string): string => {
     return bcrypt.hashSync(password, 10)
 }
 
 export const comparePassword = (password: string, userPassword: string) => {
     return bcrypt.compareSync(password, userPassword);
+}
+
+export const generateReference = (): string => {
+    return config.transaction_reference_prefix + crypto.randomBytes(12).toString('hex');
+}
+
+export const insufficientBalance = (balance: number, amount: number): boolean => {
+    return balance < amount;
 }
 
 export function toTitleCase(str: string): string {
