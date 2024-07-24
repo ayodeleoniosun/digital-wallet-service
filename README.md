@@ -63,3 +63,13 @@ To run tests, use the following command:
 ```bash
 docker-compose exec test_app npm run test
 ```
+
+### Feedbacks on the assessment
+
+The technical assessment is a true test of a backend engineer's expertise.
+It is very comprehensive and realistic within the given timeline.
+
+Few of other features which I would love to have implemented are accounting summary (Ledger) and transaction histories,
+but time was no longer on my side.
+
+Thanks.
