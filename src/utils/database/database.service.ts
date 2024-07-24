@@ -23,4 +23,13 @@ export class DatabaseService {
             console.error("Unable to connect to the database: ", error);
         }
     }
+
+    async close() {
+        try {
+            await this.sequelize.close();
+            console.log("Database successfully disconnected");
+        } catch (error: any) {
+            console.error("Unable to disconnect to the database: ", error);
+        }
+    }
 }

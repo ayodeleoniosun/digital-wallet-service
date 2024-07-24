@@ -11,4 +11,8 @@ export class AuthRepository {
     async getUserByEmail(email: string): Promise<User> {
         return await User.findOne({where: {email}});
     }
+
+    async delete(email: string) {
+        return await User.destroy({where: {email}});
+    }
 }

@@ -24,7 +24,7 @@ This is scalable, performant and reliable RESTful API that allow users to perfor
 #### Step 1: Clone the repository
 
 ```shell
-git clone https://github.com/ayodeleoniosun/digital-wallet-service.git
+git clone https://gitlab.com/kora-assessment/be-ayodele-oniosun.git
 ```
 
 #### Step 2: Switch to the repo folder
