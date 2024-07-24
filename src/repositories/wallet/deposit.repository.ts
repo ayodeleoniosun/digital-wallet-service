@@ -4,20 +4,15 @@ import {Service} from "typedi";
 
 @Service()
 export class DepositRepository {
-    async create(payload: Partial<IFundWallet>, transaction: any): Promise<Deposit> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const deposit = await Deposit.create(payload, transaction);
-                resolve(deposit as Deposit);
-            } catch (e) {
-                reject(e);
-            }
-        });
+    async create(payload: Partial<IFundWallet>, transaction: any): Promise<object> {
+        const deposit = await Deposit.create(payload, transaction) as Deposit;
+
+        return deposit.dataValues;
     }
 
-    async getDepositByReference(reference: string): Promise<IFundWallet> {
-        return await Deposit.findOne({
+    async getDepositByReference(reference: string): Promise<object> {
+        return (await Deposit.findOne({
             where: {reference}
-        }) as IFundWallet;
+        })).dataValues;
     }
 }

@@ -29,7 +29,7 @@ describe('Wallet unit tests', () => {
         expect(mockWalletRepository.getWallet).toBeCalledTimes(1);
         expect(mockWalletRepository.create).toBeCalledTimes(0);
         expect(wallet).toBeInstanceOf(WalletModelDto);
-        expect(wallet).toHaveProperty('balance', mockWalletData.id);
+        expect(wallet).toHaveProperty('balance', mockWalletData.balance);
     });
 
     it('it should create new wallet if it does not exist', async () => {
@@ -42,6 +42,6 @@ describe('Wallet unit tests', () => {
         expect(mockWalletRepository.getWallet).toBeCalledTimes(1);
         expect(mockWalletRepository.create).toBeCalledTimes(1);
         expect(wallet).toBeInstanceOf(WalletModelDto);
-        expect(wallet).toHaveProperty('balance', mockWalletData.id);
+        expect(wallet).toHaveProperty('balance', mockWalletData.balance);
     });
 });

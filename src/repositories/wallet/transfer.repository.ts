@@ -5,19 +5,14 @@ import {User} from "../../database/models/user";
 
 @Service()
 export class TransferRepository {
-    async create(payload: Partial<ITransfer>, transaction: any): Promise<Transfer> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const transfer = await Transfer.create(payload, transaction);
-                resolve(transfer as Transfer);
-            } catch (e) {
-                reject(e);
-            }
-        });
+    async create(payload: Partial<ITransfer>, transaction: any): Promise<object> {
+        const transfer = await Transfer.create(payload, transaction) as Transfer;
+
+        return transfer.dataValues;
     }
 
-    async findById(id: number): Promise<Transfer> {
-        return await Transfer.findByPk(id, {
+    async findById(id: number): Promise<object> {
+        return (await Transfer.findByPk(id, {
             include: [{
                 model: User,
                 as: 'sender'
@@ -25,6 +20,6 @@ export class TransferRepository {
                 model: User,
                 as: 'recipient'
             }]
-        });
+        })).dataValues;
     }
 }

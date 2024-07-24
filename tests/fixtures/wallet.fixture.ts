@@ -6,5 +6,5 @@ export const getWallet = (overrides?: Partial<Wallet>): Partial<Wallet> => {
     wallet.id = faker.number.int({min: 1, max: 10});
     wallet.userId = 1;
     wallet.balance = 1000;
-    return {...wallet, ...overrides};
+    return {...wallet.dataValues, ...overrides};
 };

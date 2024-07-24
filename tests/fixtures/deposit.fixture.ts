@@ -1,7 +1,7 @@
 import {faker} from "@faker-js/faker";
 import {Deposit} from "../../src/database/models/deposit";
 
-export const getBankTransferDeposit = (overrides?: Partial<Deposit>): Partial<Deposit> => {
+export const getDeposit = (overrides?: Partial<Deposit>): Partial<Deposit> => {
     let deposit = new Deposit();
     deposit.id = faker.number.int({min: 1, max: 10});
     deposit.userId = 1;
@@ -12,5 +12,5 @@ export const getBankTransferDeposit = (overrides?: Partial<Deposit>): Partial<De
     deposit.account_name = faker.person.fullName();
     deposit.bank_name = faker.company.name();
 
-    return {...deposit, ...overrides};
+    return {...deposit.dataValues, ...overrides};
 };

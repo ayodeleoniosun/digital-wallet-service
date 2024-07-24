@@ -12,5 +12,5 @@ export const getWithdrawal = (overrides?: Partial<Withdrawal>): Partial<Withdraw
     withdrawal.account_name = faker.person.fullName();
     withdrawal.bank_name = faker.company.name();
 
-    return {...withdrawal, ...overrides};
+    return {...withdrawal.dataValues, ...overrides};
 };

@@ -37,7 +37,7 @@ export class AuthService {
             throw new HttpException(AuthErrorMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
 
-        const result = comparePassword(password, user.dataValues.password);
+        const result = comparePassword(password, user.password);
 
         if (!result) {
             throw new HttpException(AuthErrorMessages.INCORRECT_LOGIN_CREDENTIALS);

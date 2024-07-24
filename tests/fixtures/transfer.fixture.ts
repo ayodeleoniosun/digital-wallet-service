@@ -9,5 +9,5 @@ export const getTransfer = (overrides?: Partial<Transfer>): Partial<Transfer> =>
     transfer.amount = 1000;
     transfer.reference = faker.string.alphanumeric(12);
 
-    return {...transfer, ...overrides};
+    return {...transfer.dataValues, ...overrides};
 };

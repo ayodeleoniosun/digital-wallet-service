@@ -23,43 +23,36 @@ export class TransferService {
     async execute(senderId: number, payload: TransferRequestDto): Promise<TransferModelDto> {
         const {amount, email} = payload;
 
-        let senderWallet = await this.walletRepository.getWallet(senderId);
-
-        if (!senderWallet) {
-            throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
-
-        const insufficientFunds = await this.walletRepository.insufficientFunds(senderWallet, amount);
-
-        if (insufficientFunds) {
-            throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
-        }
-
-        const recipient = await this.authRepository.getUserByEmail(email);
-
-        if (!recipient) {
-            throw new HttpException(WalletErrorMessages.RECIPIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
-
-        if (recipient.id === senderId) {
-            throw new HttpException(WalletErrorMessages.FORBIDDEN_TRANSFER, HttpStatus.NOT_FOUND);
-        }
-
-        let recipientWallet = await this.walletRepository.getWallet(recipient.id);
-
-        if (!recipientWallet) {
-            throw new HttpException(WalletErrorMessages.RECIPIENT_WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
-
         try {
             let transfer = null;
 
             await databaseService.sequelize.transaction(async transaction => {
-                senderWallet = await this.walletRepository.lockForUpdate(senderId, transaction);
-                recipientWallet = await this.walletRepository.lockForUpdate(recipient.id, transaction);
+                const senderWallet = await this.walletRepository.lockForUpdate(senderId, transaction);
 
-                if (!senderWallet || !recipientWallet) {
-                    throw new HttpException(WalletErrorMessages.WALLET_LOCK_NOT_ACQUIRED, HttpStatus.BAD_REQUEST);
+                if (!senderWallet) {
+                    throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
+                }
+
+                const insufficientFunds = await this.walletRepository.insufficientFunds(senderWallet, amount);
+
+                if (insufficientFunds) {
+                    throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
+                }
+
+                const recipient = await this.authRepository.getUserByEmail(email);
+
+                if (!recipient) {
+                    throw new HttpException(WalletErrorMessages.RECIPIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+                }
+
+                if (recipient.id === senderId) {
+                    throw new HttpException(WalletErrorMessages.FORBIDDEN_TRANSFER, HttpStatus.NOT_FOUND);
+                }
+
+                const recipientWallet = await this.walletRepository.lockForUpdate(recipient.id, transaction);
+
+                if (!recipientWallet) {
+                    throw new HttpException(WalletErrorMessages.RECIPIENT_WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
                 }
 
                 payload.senderId = senderId;
@@ -73,7 +66,7 @@ export class TransferService {
                 await this.walletRepository.incrementBalance(recipientWallet, amount, transaction);
             });
 
-            const data = await this.transferRepository.findById(transfer.dataValues.id);
+            const data = await this.transferRepository.findById(transfer.id);
 
             return new TransferModelDto(email, data);
 

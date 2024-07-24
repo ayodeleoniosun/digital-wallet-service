@@ -28,13 +28,12 @@ describe('Withdrawals unit tests', () => {
 
     it('it should throw an error if wallet does not exist', async () => {
         const mockWithdrawalData = getWithdrawal();
-        mockWalletRepository.getWallet.mockResolvedValue(null);
+        mockWalletRepository.lockForUpdate.mockResolvedValue(null);
 
         try {
-            await withdrawalService.execute(mockWithdrawalData.dataValues.userId, withdrawal);
+            await withdrawalService.execute(mockWithdrawalData.userId, withdrawal);
         } catch (error: any) {
-            expect(mockWalletRepository.getWallet).toBeCalledTimes(1);
-            expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(0);
+            expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(1);
             expect(mockWithdrawalRepository.create).toBeCalledTimes(0);
             expect(mockWalletRepository.decrementBalance).toBeCalledTimes(0);
             expect(error.message).toBe(WalletErrorMessages.WALLET_NOT_FOUND);
@@ -44,13 +43,13 @@ describe('Withdrawals unit tests', () => {
     it('it should throw an error if wallet has insufficient funds', async () => {
         withdrawal.amount = 2000;
         const mockWithdrawalData = getWithdrawal({amount: withdrawal.amount});
-        mockWalletRepository.getWallet.mockResolvedValue(getWallet());
+        mockWalletRepository.lockForUpdate.mockResolvedValue(getWallet());
         mockWalletRepository.insufficientFunds.mockResolvedValue(true);
 
         try {
-            await withdrawalService.execute(mockWithdrawalData.dataValues.userId, withdrawal);
+            await withdrawalService.execute(mockWithdrawalData.userId, withdrawal);
         } catch (error: any) {
-            expect(mockWalletRepository.getWallet).toBeCalledTimes(1);
+            expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(1);
             expect(mockWalletRepository.insufficientFunds).toBeCalledTimes(1);
             expect(error.message).toBe(WalletErrorMessages.INSUFFICIENT_FUNDS);
         }
@@ -58,22 +57,20 @@ describe('Withdrawals unit tests', () => {
 
     it('it should debit user wallet and decrement balance', async () => {
         const mockWithdrawalData = getWithdrawal();
-        mockWalletRepository.getWallet.mockResolvedValue(getWallet());
         mockWalletRepository.lockForUpdate.mockResolvedValue(getWallet());
         mockWithdrawalRepository.create.mockResolvedValue(mockWithdrawalData);
 
-        const newBalance = getWallet().dataValues.balance - withdrawal.amount;
+        const newBalance = getWallet().balance - withdrawal.amount;
         mockWalletRepository.decrementBalance.mockResolvedValue(getWallet({balance: newBalance}));
 
-        const funded = await withdrawalService.execute(mockWithdrawalData.dataValues.userId, withdrawal);
+        const response = await withdrawalService.execute(mockWithdrawalData.userId, withdrawal);
 
-        expect(mockWalletRepository.getWallet).toBeCalledTimes(1);
         expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(1);
         expect(mockWithdrawalRepository.create).toBeCalledTimes(1);
         expect(mockWalletRepository.decrementBalance).toBeCalledTimes(1);
-        expect(funded).toBeInstanceOf(WithdrawalModelDto);
-        expect(funded).toHaveProperty('userId', mockWithdrawalData.dataValues.userId);
-        expect(funded).toHaveProperty('account_name', mockWithdrawalData.dataValues.account_name);
-        expect(funded).toHaveProperty('account_number', mockWithdrawalData.dataValues.account_number);
+        expect(response).toBeInstanceOf(WithdrawalModelDto);
+        expect(response).toHaveProperty('userId', mockWithdrawalData.userId);
+        expect(response).toHaveProperty('account_name', mockWithdrawalData.account_name);
+        expect(response).toHaveProperty('account_number', mockWithdrawalData.account_number);
     });
 });

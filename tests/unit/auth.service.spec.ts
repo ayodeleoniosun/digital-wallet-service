@@ -87,7 +87,7 @@ describe('Authentication unit tests', () => {
             const payload = new LoginRequestDto();
             payload.email = mockUserData.email;
             payload.password = 'IncorrectPassword';
-
+            
             try {
                 await authService.login(payload);
             } catch (error: any) {

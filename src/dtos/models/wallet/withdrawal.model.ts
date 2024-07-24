@@ -1,5 +1,3 @@
-import {Withdrawal} from "../../../database/models/withdrawal";
-
 export class WithdrawalModelDto {
     id: number;
     userId: number;
@@ -11,9 +9,7 @@ export class WithdrawalModelDto {
     reference: string;
     createdAt: Date;
 
-    constructor(data: Withdrawal) {
-        const withdrawal = data.dataValues;
-
+    constructor(withdrawal: any) {
         this.id = withdrawal.id;
         this.userId = withdrawal.userId;
         this.account_number = withdrawal.account_number;

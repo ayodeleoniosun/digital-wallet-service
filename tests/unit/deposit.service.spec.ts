@@ -5,13 +5,11 @@ import {mockWalletRepository} from "../mocks/repositories/wallet.mock.repository
 import {DepositService} from "../../src/services/wallet/deposit.service";
 import {DepositRepository} from "../../src/repositories/wallet/deposit.repository";
 import {WalletRepository} from "../../src/repositories/wallet/wallet.repository";
-import {mockRedisService} from "../mocks/services/redis.mock.service";
-import {getBankTransferDeposit} from "../fixtures/deposit.fixture";
-import {getWallet} from "../fixtures/wallet.fixture";
+import {getDeposit} from "../fixtures/deposit.fixture";
 import deposit from "../fixtures/payloads/deposit.test.payload";
-import {DepositModelDto} from "../../src/dtos/models/wallet/deposit.model";
 import {WalletErrorMessages} from "../../src/utils/enums/messages/wallet/wallet.error.messages";
-import {RedisService} from "../../src/services/redis.service";
+import {getWallet} from "../fixtures/wallet.fixture";
+import {DepositModelDto} from "../../src/dtos/models/wallet/deposit.model";
 
 describe('Deposit unit tests', () => {
     let depositService: DepositService;
@@ -19,7 +17,6 @@ describe('Deposit unit tests', () => {
     beforeAll(async () => {
         Container.set(WalletRepository, mockWalletRepository);
         Container.set(DepositRepository, mockDepositRepository);
-        Container.set(RedisService, mockRedisService);
 
         depositService = Container.get(DepositService);
     });
@@ -30,14 +27,13 @@ describe('Deposit unit tests', () => {
     });
 
     it('it should throw an error if wallet does not exist', async () => {
-        const mockBankTransferDepositData = getBankTransferDeposit();
-        mockWalletRepository.getWallet.mockResolvedValue(null);
+        const mockDepositData = getDeposit();
+        mockWalletRepository.lockForUpdate.mockResolvedValue(null);
 
         try {
-            await depositService.execute(mockBankTransferDepositData.dataValues.userId, deposit);
+            await depositService.execute(mockDepositData.userId, deposit);
         } catch (error: any) {
-            expect(mockWalletRepository.getWallet).toBeCalledTimes(1);
-            expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(0);
+            expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(1);
             expect(mockDepositRepository.create).toBeCalledTimes(0);
             expect(mockWalletRepository.incrementBalance).toBeCalledTimes(0);
             expect(error.message).toBe(WalletErrorMessages.WALLET_NOT_FOUND);
@@ -45,42 +41,39 @@ describe('Deposit unit tests', () => {
     });
 
     it('it should throw an error if deposit has already been done', async () => {
-        const mockBankTransferDepositData = getBankTransferDeposit();
-        mockWalletRepository.getWallet.mockResolvedValue(getWallet());
-        mockWalletRepository.lockForUpdate.mockResolvedValue(mockBankTransferDepositData);
-        mockDepositRepository.create.mockResolvedValue(mockBankTransferDepositData);
+        const mockDepositData = getDeposit();
+        mockWalletRepository.lockForUpdate.mockResolvedValue(mockDepositData);
+        mockDepositRepository.getDepositByReference.mockResolvedValue('validReference');
+        mockDepositRepository.create.mockResolvedValue(mockDepositData);
 
-        const newBalance = getWallet().dataValues.balance + deposit.amount;
+        const newBalance = getWallet().balance + deposit.amount;
         mockWalletRepository.incrementBalance.mockResolvedValue(getWallet({balance: newBalance}));
 
-        await depositService.execute(mockBankTransferDepositData.dataValues.userId, deposit);
-
         try {
-            await depositService.execute(mockBankTransferDepositData.dataValues.userId, deposit);
+            await depositService.execute(mockDepositData.userId, deposit);
         } catch (error: any) {
             expect(error.message).toBe(WalletErrorMessages.DEPOSIT_ALREADY_DONE);
         }
     });
 
     it('it should fund user wallet and increment balance', async () => {
-        const mockBankTransferDepositData = getBankTransferDeposit();
-        mockWalletRepository.getWallet.mockResolvedValue(getWallet());
-        mockWalletRepository.lockForUpdate.mockResolvedValue(mockBankTransferDepositData);
-        mockDepositRepository.create.mockResolvedValue(mockBankTransferDepositData);
+        const mockDepositData = getDeposit();
+        mockWalletRepository.lockForUpdate.mockResolvedValue(mockDepositData);
+        mockDepositRepository.getDepositByReference.mockResolvedValue(null);
+        mockDepositRepository.create.mockResolvedValue(mockDepositData);
 
-        const newBalance = getWallet().dataValues.balance + deposit.amount;
+        const newBalance = getWallet().balance + deposit.amount;
         mockWalletRepository.incrementBalance.mockResolvedValue(getWallet({balance: newBalance}));
 
-        const funded = await depositService.execute(mockBankTransferDepositData.dataValues.userId, deposit);
-
-        expect(mockWalletRepository.getWallet).toBeCalledTimes(1);
+        const response = await depositService.execute(mockDepositData.userId, deposit);
+        
         expect(mockWalletRepository.lockForUpdate).toBeCalledTimes(1);
         expect(mockDepositRepository.create).toBeCalledTimes(1);
         expect(mockWalletRepository.incrementBalance).toBeCalledTimes(1);
-        expect(funded).toBeInstanceOf(DepositModelDto);
-        expect(funded).toHaveProperty('source', mockBankTransferDepositData.dataValues.source);
-        expect(funded).toHaveProperty('userId', mockBankTransferDepositData.dataValues.userId);
-        expect(funded).toHaveProperty('account_name', mockBankTransferDepositData.dataValues.account_name);
-        expect(funded).toHaveProperty('account_number', mockBankTransferDepositData.dataValues.account_number);
+        expect(response).toBeInstanceOf(DepositModelDto);
+        expect(response).toHaveProperty('source', mockDepositData.source);
+        expect(response).toHaveProperty('userId', mockDepositData.userId);
+        expect(response).toHaveProperty('account_name', mockDepositData.account_name);
+        expect(response).toHaveProperty('account_number', mockDepositData.account_number);
     });
 });

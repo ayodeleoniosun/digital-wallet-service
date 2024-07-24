@@ -19,26 +19,20 @@ export class WithdrawalService {
     async execute(userId: number, payload: DebitWalletRequestDto): Promise<WithdrawalModelDto> {
         const {amount, fee} = payload;
 
-        const getWallet = await this.walletRepository.getWallet(userId);
-
-        if (!getWallet) {
-            throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
-
-        const totalAmount = amount + fee;
-
-        const insufficientFunds = await this.walletRepository.insufficientFunds(getWallet, totalAmount);
-
-        if (insufficientFunds) {
-            throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
-        }
-
         try {
             return await databaseService.sequelize.transaction(async transaction => {
                 const wallet = await this.walletRepository.lockForUpdate(userId, transaction);
 
                 if (!wallet) {
                     throw new HttpException(WalletErrorMessages.WALLET_NOT_FOUND, HttpStatus.NOT_FOUND);
+                }
+
+                const totalAmount = amount + fee;
+
+                const insufficientFunds = await this.walletRepository.insufficientFunds(wallet, totalAmount);
+
+                if (insufficientFunds) {
+                    throw new HttpException(WalletErrorMessages.INSUFFICIENT_FUNDS, HttpStatus.BAD_REQUEST);
                 }
 
                 payload.userId = userId;

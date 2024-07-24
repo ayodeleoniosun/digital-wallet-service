@@ -1,5 +1,3 @@
-import {Deposit} from "../../../database/models/deposit";
-
 export enum SourceType {
     BANK_TRANSFER = 'bank_transfer',
     CARD = 'card'
@@ -18,9 +16,7 @@ export class DepositModelDto {
     auth_token?: string;
     createdAt: Date;
 
-    constructor(data: Deposit) {
-        const deposit = data.dataValues;
-
+    constructor(deposit: any) {
         this.id = deposit.id;
         this.userId = deposit.userId;
         this.source = <SourceType>deposit.source;

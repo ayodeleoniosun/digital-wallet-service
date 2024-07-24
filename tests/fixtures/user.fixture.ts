@@ -9,5 +9,5 @@ export const getUser = (overrides?: Partial<User>): Partial<User> => {
     user.lastname = faker.internet.displayName();
     user.email = faker.internet.email();
     user.password = hashPassword('JohnDoe@2024');
-    return {...user, ...overrides};
+    return {...user.dataValues, ...overrides};
 };
